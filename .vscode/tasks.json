@@ -1,0 +1,707 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "tankogeddon Win32 Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Debug",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 Debug Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Debug",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddon Win32 Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Debug",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"DebugGame",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"DebugGame",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddon Win32 DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"DebugGame",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Development",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 Development Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Development",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddon Win32 Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Development",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 Shipping Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Shipping",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 Shipping Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Shipping",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddon Win32 Shipping Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 Shipping Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Shipping",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 Test Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Test",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 Test Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Test",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddon Win32 Test Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win32 Test Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddon",
+				"Win32",
+				"Test",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Debug",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Debug Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Debug",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddon Win64 Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Debug",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"DebugGame",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"DebugGame",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddon Win64 DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"DebugGame",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Development",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Development Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Development",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddon Win64 Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Development",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Shipping Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Shipping",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Shipping Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Shipping",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddon Win64 Shipping Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Shipping Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Shipping",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Test Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Test",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Test Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Test",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddon Win64 Test Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddon Win64 Test Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddon",
+				"Win64",
+				"Test",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddonEditor Win64 Debug Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddonEditor",
+				"Win64",
+				"Debug",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddonEditor Win64 Debug Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddonEditor",
+				"Win64",
+				"Debug",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddonEditor Win64 Debug Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddonEditor Win64 Debug Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddonEditor",
+				"Win64",
+				"Debug",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddonEditor Win64 DebugGame Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddonEditor",
+				"Win64",
+				"DebugGame",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddonEditor Win64 DebugGame Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddonEditor",
+				"Win64",
+				"DebugGame",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddonEditor Win64 DebugGame Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddonEditor Win64 DebugGame Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddonEditor",
+				"Win64",
+				"DebugGame",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddonEditor Win64 Development Build",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddonEditor",
+				"Win64",
+				"Development",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddonEditor Win64 Development Rebuild",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Build.bat",
+			"args": [
+				"tankogeddonEditor",
+				"Win64",
+				"Development",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"dependsOn": [
+				"tankogeddonEditor Win64 Development Clean"
+			],
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		},
+		{
+			"label": "tankogeddonEditor Win64 Development Clean",
+			"group": "build",
+			"command": "Engine\\Build\\BatchFiles\\Clean.bat",
+			"args": [
+				"tankogeddonEditor",
+				"Win64",
+				"Development",
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-waitmutex"
+			],
+			"problemMatcher": "$msCompile",
+			"type": "shell",
+			"options": {
+				"cwd": "E:\\epic_games\\UE_4.26"
+			}
+		}
+	]
+}

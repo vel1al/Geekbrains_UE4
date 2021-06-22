@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "tankogeddonEditor Editor Win64 Development (tankogeddon)",
+            "intelliSenseMode": "msvc-x64",
+            "compileCommands": "E:\\ue4 projects\\tankogeddon\\.vscode\\compileCommands_tankogeddon.json",
+            "cStandard": "c17",
+            "cppStandard": "c++17"
+        },
+        {
+            "name": "Win32",
+            "intelliSenseMode": "msvc-x64",
+            "compileCommands": "E:\\ue4 projects\\tankogeddon\\.vscode\\compileCommands_Default.json",
+            "cStandard": "c17",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}

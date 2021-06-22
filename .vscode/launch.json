@@ -1,0 +1,128 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "tankogeddon (Debug)",
+			"request": "launch",
+			"preLaunchTask": "tankogeddon Win64 Debug Build",
+			"program": "E:\\ue4 projects\\tankogeddon\\Binaries\\Win64\\UE4-Win64-Debug.exe",
+			"args": [
+			],
+			"cwd": "E:\\epic_games\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\epic_games\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "tankogeddon (DebugGame)",
+			"request": "launch",
+			"preLaunchTask": "tankogeddon Win64 DebugGame Build",
+			"program": "E:\\ue4 projects\\tankogeddon\\Binaries\\Win64\\UE4-Win64-DebugGame.exe",
+			"args": [
+			],
+			"cwd": "E:\\epic_games\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\epic_games\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "tankogeddon (Development)",
+			"request": "launch",
+			"preLaunchTask": "tankogeddon Win64 Development Build",
+			"program": "E:\\ue4 projects\\tankogeddon\\Binaries\\Win64\\UE4.exe",
+			"args": [
+			],
+			"cwd": "E:\\epic_games\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\epic_games\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "tankogeddon (Shipping)",
+			"request": "launch",
+			"preLaunchTask": "tankogeddon Win64 Shipping Build",
+			"program": "E:\\ue4 projects\\tankogeddon\\Binaries\\Win64\\UE4-Win64-Shipping.exe",
+			"args": [
+			],
+			"cwd": "E:\\epic_games\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\epic_games\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "tankogeddon (Test)",
+			"request": "launch",
+			"preLaunchTask": "tankogeddon Win64 Test Build",
+			"program": "E:\\ue4 projects\\tankogeddon\\Binaries\\Win64\\UE4-Win64-Test.exe",
+			"args": [
+			],
+			"cwd": "E:\\epic_games\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\epic_games\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "tankogeddonEditor (Debug)",
+			"request": "launch",
+			"preLaunchTask": "tankogeddonEditor Win64 Debug Build",
+			"program": "E:\\epic_games\\UE_4.26\\Engine\\Binaries\\Win64\\UE4Editor-Win64-Debug.exe",
+			"args": [
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject"
+			],
+			"cwd": "E:\\epic_games\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\epic_games\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "tankogeddonEditor (DebugGame)",
+			"request": "launch",
+			"preLaunchTask": "tankogeddonEditor Win64 DebugGame Build",
+			"program": "E:\\epic_games\\UE_4.26\\Engine\\Binaries\\Win64\\UE4Editor-Win64-DebugGame.exe",
+			"args": [
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject"
+			],
+			"cwd": "E:\\epic_games\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\epic_games\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "tankogeddonEditor (Development)",
+			"request": "launch",
+			"preLaunchTask": "tankogeddonEditor Win64 Development Build",
+			"program": "E:\\epic_games\\UE_4.26\\Engine\\Binaries\\Win64\\UE4Editor.exe",
+			"args": [
+				"E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject"
+			],
+			"cwd": "E:\\epic_games\\UE_4.26",
+			"stopAtEntry": false,
+			"externalConsole": true,
+			"type": "cppvsdbg",
+			"visualizerFile": "E:\\epic_games\\UE_4.26\\Engine\\Extras\\VisualStudioDebugging\\UE4.natvis"
+		},
+		{
+			"name": "Generate Project Files",
+			"type": "clr",
+			"request": "launch",
+			"program": "E:\\epic_games\\UE_4.26\\Engine\\Binaries\\DotNET\\UnrealBuildTool.exe",
+			"console": "externalTerminal",
+			"args": [
+				"-projectfiles",
+				"-vscode",
+				"-project=E:\\ue4 projects\\tankogeddon\\tankogeddon.uproject",
+				"-game",
+				"-engine"
+			],
+			"internalConsoleOptions": "openOnSessionStart",
+			"cwd": "E:\\epic_games\\UE_4.26"
+		}
+	]
+}

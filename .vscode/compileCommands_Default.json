@@ -1,0 +1,47 @@
+[
+	{
+		"file": "E:\\\\ue4 projects\\\\tankogeddon\\\\Source\\\\tankogeddon\\\\tankogeddon.Build.cs",
+		"command": "cl.exe @\"E:\\ue4 projects\\tankogeddon\\.vscode\\compileCommands_Default\\tankogeddon.182.rsp\"",
+		"directory": "E:\\epic_games\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "E:\\\\ue4 projects\\\\tankogeddon\\\\Source\\\\tankogeddon\\\\tankogeddon.cpp",
+		"command": "cl.exe @\"E:\\ue4 projects\\tankogeddon\\.vscode\\compileCommands_Default\\tankogeddon.182.rsp\"",
+		"directory": "E:\\epic_games\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "E:\\\\ue4 projects\\\\tankogeddon\\\\Source\\\\tankogeddon\\\\tankogeddon.h",
+		"command": "cl.exe @\"E:\\ue4 projects\\tankogeddon\\.vscode\\compileCommands_Default\\tankogeddon.182.rsp\"",
+		"directory": "E:\\epic_games\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "E:\\\\ue4 projects\\\\tankogeddon\\\\Source\\\\tankogeddon\\\\tankogeddonGameModeBase.cpp",
+		"command": "cl.exe @\"E:\\ue4 projects\\tankogeddon\\.vscode\\compileCommands_Default\\tankogeddon.182.rsp\"",
+		"directory": "E:\\epic_games\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "E:\\\\ue4 projects\\\\tankogeddon\\\\Source\\\\tankogeddon\\\\tankogeddonGameModeBase.h",
+		"command": "cl.exe @\"E:\\ue4 projects\\tankogeddon\\.vscode\\compileCommands_Default\\tankogeddon.182.rsp\"",
+		"directory": "E:\\epic_games\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "E:\\\\ue4 projects\\\\tankogeddon\\\\Source\\\\tankogeddon\\\\TankPawn.cpp",
+		"command": "cl.exe @\"E:\\ue4 projects\\tankogeddon\\.vscode\\compileCommands_Default\\tankogeddon.182.rsp\"",
+		"directory": "E:\\epic_games\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "E:\\\\ue4 projects\\\\tankogeddon\\\\Source\\\\tankogeddon\\\\TankPawn.h",
+		"command": "cl.exe @\"E:\\ue4 projects\\tankogeddon\\.vscode\\compileCommands_Default\\tankogeddon.182.rsp\"",
+		"directory": "E:\\epic_games\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "E:\\\\ue4 projects\\\\tankogeddon\\\\Source\\\\tankogeddon\\\\TankPlayerController.cpp",
+		"command": "cl.exe @\"E:\\ue4 projects\\tankogeddon\\.vscode\\compileCommands_Default\\tankogeddon.182.rsp\"",
+		"directory": "E:\\epic_games\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "E:\\\\ue4 projects\\\\tankogeddon\\\\Source\\\\tankogeddon\\\\TankPlayerController.h",
+		"command": "cl.exe @\"E:\\ue4 projects\\tankogeddon\\.vscode\\compileCommands_Default\\tankogeddon.182.rsp\"",
+		"directory": "E:\\epic_games\\UE_4.26\\Engine\\Source"
+	}
+]
