@@ -61,6 +61,7 @@ void ACanon::QueueShot(){
 }
 
 bool ACanon::IsReadyToFire() const {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Queue shot"));
 	return bIsReadyToFire;
 }
 
@@ -91,13 +92,10 @@ void ACanon::FireSecond(){
 		GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACanon::Reload, FireReloadTime, false);
 	}
 	else{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Queue shot"));
-
 		bIsReadyToFire = false;
 		--CurrentAmmoCount;
 
 		for(int CurrentQueueShot = QueueShotsCount; CurrentQueueShot > 0; --CurrentQueueShot){
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Current queue shot: %d"),CurrentQueueShot));
 			GetWorld()->GetTimerManager().SetTimer(QueueIntervalTimerHandle, this, &ACanon::QueueShot, QueueIntervalTime, false);
 		}
 		GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &ACanon::Cooldown, SecondFireCooldownTime, false);
