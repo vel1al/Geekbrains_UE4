@@ -10,19 +10,28 @@
  * 
  */
 UCLASS()
-class TANKOGEDDON_API ATankPlayerController : public APlayerController
-{
+class TANKOGEDDON_API ATankPlayerController : public APlayerController{
 	GENERATED_BODY()
 
-public:
-	virtual void BeginPlay() override;
-	virtual void SetupInputComponent() override;
+	public:
+		ATankPlayerController();
 
-private:
-	void MoveXAxis(float AxisValue);
-	void MoveYAxis(float AxisValue);
+		virtual void BeginPlay() override;
+		virtual void SetupInputComponent() override;
+		virtual void Tick(float DeltaSeconds) override;
 
-private:
-	UPROPERTY()
-	class ATankPawn* TankPawn;
+		UFUNCTION(BlueprintPure, Category = "Input")
+		FVector GetMousePos() const;
+
+	private:
+		void MoveXAxis(float AxisValue);
+		void RotateYAxis(float AxisValue);
+		void FireMain();
+		void FireSecond();
+
+	private:
+		UPROPERTY()
+		class ATankPawn* TankPawn;
+
+		FVector CachedMousePosition;
 };
