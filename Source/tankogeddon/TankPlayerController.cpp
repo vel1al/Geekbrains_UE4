@@ -16,8 +16,11 @@ void ATankPlayerController::SetupInputComponent(){
 
     InputComponent->BindAxis("MoveXAxis", this, &ATankPlayerController::MoveXAxis);
     InputComponent->BindAxis("RotateYAxis", this, &ATankPlayerController::RotateYAxis);
+
     InputComponent->BindAction("FireMain", IE_Pressed, this, &ATankPlayerController::FireMain);
     InputComponent->BindAction("FireSecond", IE_Pressed, this, &ATankPlayerController::FireSecond);
+
+    InputComponent->BindAction("ChangeTurret", IE_Pressed, this, &ATankPlayerController::ChangeTurret);
 }
 
 void ATankPlayerController::MoveXAxis(const float AxisValue){
@@ -40,6 +43,13 @@ void ATankPlayerController::FireMain(){
 void ATankPlayerController::FireSecond(){
     if (TankPawn){
         TankPawn->FireSecond();
+    }
+}
+
+void ATankPlayerController::ChangeTurret(){
+    if(TankPawn){
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Changed"));
+        TankPawn->ChangeTurret();
     }
 }
 

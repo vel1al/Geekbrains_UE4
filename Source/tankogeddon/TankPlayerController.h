@@ -26,8 +26,10 @@ class TANKOGEDDON_API ATankPlayerController : public APlayerController{
 	private:
 		void MoveXAxis(float AxisValue);
 		void RotateYAxis(float AxisValue);
+		
 		void FireMain();
 		void FireSecond();
+		void ChangeTurret();
 
 	private:
 		UPROPERTY()

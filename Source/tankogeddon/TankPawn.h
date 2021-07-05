@@ -11,42 +11,9 @@ class TANKOGEDDON_API ATankPawn : public APawn{
 		GENERATED_BODY()
 
 	public:
-		// Sets default values for this pawn's properties
+		
 		ATankPawn();
 
-		UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly, Category = "Components")
-		class UStaticMeshComponent* BodyMesh;
-		UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly, Category = "Components")
-		UStaticMeshComponent* TurretMesh;
-
-		UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly, Category = "Components")
-		class USpringArmComponent* SpringArm;
-
-		UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly, Category = "Components")
-		class UCameraComponent* Camera;
-
-		UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly, Category = "Components")
-		class UArrowComponent* CannonSetupPoint;
-		
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Cannon")
-		TSubclassOf<class ACanon> CannonClass;
-
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
-		float TankMoveXAxisSpeed = 100.f;
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
-		float TankRotationYAxisSpeed = 100.f;
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
-		float TankRotationYAxisSensivity = 100.f;
-
-    	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
-    	float TurretRotationSensitivity = 0.5;
-
-	protected:
-		// Called when the game starts or when spawned
-		virtual void BeginPlay() override;
-		virtual void EndPlay(EEndPlayReason::Type Reason) override;
-
-	public:
 		// Called every frame
 		virtual void Tick(const float DeltaTime) override;
 
@@ -60,18 +27,64 @@ class TANKOGEDDON_API ATankPawn : public APawn{
 		UFUNCTION(BlueprintCallable, Category = "Fire")
 		void FireSecond();
 
+		UFUNCTION(BlueprintCallable, Category = "Turret")
+		void SetUpTurret(TSubclassOf<ATankTurret> NewTurretClass);
+
+		UFUNCTION(BlueprintCallable, Category = "Turret")
+		void SetUpCannon(TSubclassOf<class ACanon> NewCannonClass);
+
+		UFUNCTION(BlueprintCallable, Category = "Turret")
+		void ChangeTurret();
+
+		UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly, Category = "Components")
+		class UStaticMeshComponent* BodyMesh;
+
+		UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly, Category = "Components")
+		class USpringArmComponent* SpringArm;
+
+		UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly, Category = "Components")
+		class UCameraComponent* Camera;
+
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+		TSubclassOf<class ATankTurret> DefaultTurretClass;
+
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+		float TankMoveXAxisSpeed = 100.f;
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+		float TankRotationYAxisSpeed = 100.f;
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+		float TankRotationYAxisSensivity = 100.f;
+
+    	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
+    	float TurretRotationSensitivity = 0.5;
+		
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
+		int TurretSlotsCount = 2;
+
+	protected:
+		// Called when the game starts or when spawned
+		virtual void BeginPlay() override;
+		virtual void EndPlay(EEndPlayReason::Type Reason) override;
+	
+
 	private:
 		UPROPERTY()
-		ACanon* Cannon;
+		ATankTurret* TankTurret;
 		UPROPERTY()
-		class ATankPlayerController* TankController = nullptr;
+		class ATankPlayerController* TankController;
+		UPROPERTY()
+		TArray<ATankTurret*> TurretSlots;
 
+
+		ATankTurret* GetCurrentActiveTurret();
 		void MoveTankXAxis(const float DeltaTime);
 		void RotateTankYAxis(const float DeltaTime);
 		void RotateTurretYAxis();
 
-		void SetUpCannon();
-		void InvalidateCannon();
+		void InvalidateTurret(int RequiredSlot);
+
+		int CurrentTurretSlot = 0;
+		int AllocatedTurretSlotsCount = 0;
 
 		float CurrentTankMoveTorqueXAxis = 0.f;
 		float CurrentTankRotationTorqueYAxis = 0.f;

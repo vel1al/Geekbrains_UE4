@@ -20,46 +20,46 @@ class TANKOGEDDON_API ACanon : public AActor{
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		class UArrowComponent* ProjectileSpawnPoint;
 
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings")
-		float FireReloadTime = 7.f;
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Cannon")
+		TSubclassOf<class AProjectile> ProjectileClass;
 
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings")
-		float MainFireRange = 1000.f;
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings")
-		float MainFireDamage = 1.f;
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings")
-		float MainFireCooldownTime = 2.f;
-
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings")
-		float SecondFireRange = 1000.f;
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings")
-		float SecondFireDamage = 1.f;
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings")
-		float SecondFireCooldownTime = 5.f;
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings")
-		float QueueIntervalTime = 0.25;
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings");
-		int QueueShotsCount = 4;
-
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings");
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Cannon");
+		int AmmunitionCount = 300;
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Cannon");
 		int AmmoCount = 10;
 
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings")
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Cannon")
 		ECannonType Type = ECannonType::FireProjectile;
+
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|General")
+		float FireReloadTime = 7.f;
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|General")
+		float FireRange = 7.f;
+
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Main")
+		float MainFireDamage = 1.f;
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Main")
+		float MainFireCooldownTime = 2.f;
+
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Second")
+		float SecondFireDamage = 1.f;
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Second")
+		float SecondFireCooldownTime = 5.f;
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Second")
+		float QueueIntervalTime = 0.25;
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Second");
+		int QueueShotsCount = 4;
 
 		UFUNCTION(BlueprintCallable, Category = "Fire")
 		void FireMain();
-
 		UFUNCTION(BlueprintCallable, Category = "Fire")
 		void FireSecond();
 
+		UFUNCTION(BlueprintCallable, Category = "Ammo")
+		void RestoreAmmo();
+
 		UFUNCTION(BlueprintPure, Category = "Fire")
 		bool IsReadyToFire() const;
-
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings")
-		float DebugMsgTime = 1.f;
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire settings")
-		float DebugMsgTimeQ = 0.25;
 
 	protected:
 		// Called when the game starts or when spawned
@@ -70,15 +70,20 @@ class TANKOGEDDON_API ACanon : public AActor{
 		void Reload();
 		void Cooldown();
 
+		void Fire();
+
 		void QueueShot();
 		void MainShot();
 
 		bool bIsReadyToFire = false;
-		bool bIsQueueEnd = true;
-
+	
+		int CurrentQueueShot;
 		int CurrentAmmoCount;	
+		int CurrentAmmunitionCount;
 
 		FTimerHandle ReloadTimerHandle;
 		FTimerHandle CooldownTimerHandle;
 		FTimerHandle QueueIntervalTimerHandle;
+
+		//class UProjectilePoolManager* ProjectilePoolManager;
 };
