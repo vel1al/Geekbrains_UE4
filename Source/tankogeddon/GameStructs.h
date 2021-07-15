@@ -11,3 +11,34 @@ enum class ECannonType : uint8{
     FireProjectile = 0 UMETA(DisplayName = "Projectile"),
     FireRay = 1 UMETA(DisplayName = "Raycast")
 };
+
+USTRUCT(BlueprintType)
+struct FDamageData{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    float DamageValue;
+    
+    UPROPERTY()
+    AActor* Instigator;
+    
+    UPROPERTY()
+    AActor* DamageMaker;
+};
+
+USTRUCT(BlueprintType)
+struct FProjectilePreStartData{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    FVector Location;
+
+    UPROPERTY()
+    FRotator Rotation;
+
+    UPROPERTY()
+    APawn* Instigator;
+
+    UPROPERTY()
+    float CanonDamage;
+};

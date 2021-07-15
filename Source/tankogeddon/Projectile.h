@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameStructs.h"
 #include "Projectile.generated.h"
 
 UCLASS()
@@ -13,12 +14,19 @@ class TANKOGEDDON_API AProjectile : public AActor{
 	public:
 		AProjectile();
 
-		void Start(FVector StartPosition, FRotator StartRotation);
-		
+		void Start(FProjectilePreStartData StartData);
+
+		virtual void BeginPlay() override;		
 		virtual void EndPlay(EEndPlayReason::Type Reason) override;
 
 		UFUNCTION(BlueprintCallable)
 		bool IsUsing() const;
+
+		UFUNCTION(BlueprintCallable)
+		void SetMoveRange(const float value);
+
+		UPROPERTY()
+		UWorld* World;
 
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		UStaticMeshComponent* Mesh;
@@ -29,16 +37,16 @@ class TANKOGEDDON_API AProjectile : public AActor{
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 		float MoveRate = 0.005f;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
+		float ProjectileDamage = 1.f;
+
+	private:
 		float MoveRange = 1000.f;
 
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
-		float Damage = 1.f;
-
-	protected:
 		bool bIsUsing = false;
 
 		float PassedWay;
+		float ShotDamage;
 
 		FTimerHandle MovementTimerHandle;
 

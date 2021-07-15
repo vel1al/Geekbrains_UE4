@@ -1,48 +1,93 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-// #include <algorithm>
-// #include "Projectile.h"
-// #include "ProjectilePoolManager.h"
+#include <algorithm>
+#include "ProjectilePoolManager.h"
+#include "Projectile.h"
 
-// AProjectile* UProjectilePoolManager::FindNextAvaibleObject(){
-//     if(AllocatedObjects.Num() > 0)
-//         for(size_t itt = 0; itt < AllocatedObjects.Num(); ++itt)
-//             if(AllocatedObjects[itt]->IsUsing())
-//                 return AllocatedObjects[itt];
 
-//     return GetWorld()->SpawnActor<AProjectile>(FVector(0.f), FRotator(0.f));
+UProjectilePoolManager::UProjectilePoolManager(){
+    SetProjectileClass(AProjectile::StaticClass());
+}
+
+void UProjectilePoolManager::PostInitProperties(){
+    Super::PostInitProperties();
+
+
+    if(GetOuter() && GetOuter()->GetWorld()) 
+        BeginPlay();
+}
+
+void UProjectilePoolManager::BeginPlay(){
+    CreateProjectile();
+}
+
+// void UProjectilePoolManager::BeginDestroy(){
+//     Super::BeginDestroy();
+
+
+//     AllocatedObjects.Empty();
 // }
 
-// AProjectile* UProjectilePoolManager::GetProjectile(){
-//     AProjectile* ReturningValue;
+AProjectile* UProjectilePoolManager::FindNextAvaibleObject(){
+    AProjectile* ReturningValue = nullptr;
 
-//     GEngine->AddOnScreenDebugMessage(10, 1.f, FColor::Orange, TEXT("Projectile: pop projectile from pool"));
+    if(AllocatedObjects.Num() > 1)
+        for (int element = 0; element < AllocatedObjects.Num(); ++element)
+            if(AllocatedObjects[element])
+                if(!(AllocatedObjects[element]->IsUsing()))
+                    ReturningValue = AllocatedObjects[element];
+    
 
-//     if(!(FirstAvaibleObject)){
-//         GEngine->AddOnScreenDebugMessage(10, 1.f, FColor::Orange, TEXT("Projectile: creating new projectile"));
-//         ReturningValue = GetWorld()->SpawnActor<AProjectile>(FVector(0.f), FRotator(0.f));
+    if(!(ReturningValue))
+        ReturningValue = CreateProjectile();
+
+    return ReturningValue;
+}
+
+AProjectile* UProjectilePoolManager::GetProjectile(){
+    AProjectile* ReturningValue;
+
+    if(!(FirstAvaibleObject)){
+        ReturningValue = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, FVector(0.f), FRotator(0.f));
         
-//         AllocatedObjects.Add(ReturningValue);
-//     } 
-//     else{
-//         GEngine->AddOnScreenDebugMessage(10, 1.f, FColor::Orange, TEXT("Projectile: getting allocated projectile"));
-//         ReturningValue = FirstAvaibleObject;
+        AllocatedObjects.Add(ReturningValue);
+    } 
+    else{
+        ReturningValue = FirstAvaibleObject;
 
-//         FirstAvaibleObject = FindNextAvaibleObject();
-//     }
+        FirstAvaibleObject = FindNextAvaibleObject();
+    }
 
-//     return ReturningValue;
-// }
+    return ReturningValue;
+}
 
-// void UProjectilePoolManager::Tick(const float DeltaTime){
-//     if(!(FirstAvaibleObject))
-//         FirstAvaibleObject = FindNextAvaibleObject();
-// }
+AProjectile* UProjectilePoolManager::CreateProjectile(){
+    AProjectile* ReturningValue;
+    ReturningValue = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, FVector(0.f), FRotator(0.f));
 
-// bool UProjectilePoolManager::IsTickable() const{
-// 	return true;
-// }
+    AllocatedObjects.Add(ReturningValue);
 
-// TStatId UProjectilePoolManager::GetStatId() const{
-// 	return TStatId();
-// }
+    return ReturningValue;
+}
+
+TSubclassOf<AProjectile> UProjectilePoolManager::GetProjectileClass() const{
+    return ProjectileClass;
+}
+
+void UProjectilePoolManager::SetProjectileClass(TSubclassOf<AProjectile> projectileClass){
+    ProjectileClass = projectileClass;
+}
+
+void UProjectilePoolManager::Tick(const float DeltaTime){
+    if(GetOuter() && GetOuter()->GetWorld())
+        if(!(FirstAvaibleObject))
+            FirstAvaibleObject = FindNextAvaibleObject();
+}
+
+bool UProjectilePoolManager::IsTickable() const{
+	return true;
+}
+
+TStatId UProjectilePoolManager::GetStatId() const{
+	return TStatId();
+}

@@ -6,12 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "tankogeddonGameModeBase.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class TANKOGEDDON_API AtankogeddonGameModeBase : public AGameModeBase
-{
+class TANKOGEDDON_API AtankogeddonGameModeBase : public AGameModeBase{
 	GENERATED_BODY()
-	
+
 };

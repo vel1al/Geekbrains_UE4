@@ -1,13 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TankTurret.h"
 #include "Components/ArrowComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Canon.h"
+#include "IScoreCounter.h"
 
-// Sets default values
 ATankTurret::ATankTurret(){
 	PrimaryActorTick.bCanEverTick = false;
 
@@ -21,7 +18,13 @@ ATankTurret::ATankTurret(){
 	CannonSetupPoint->AttachToComponent(TurretMesh, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
-// Called when the game starts or when spawned
+void ATankTurret::IncrementScore(const int value){
+	IIScoreCounter* TankBody = Cast<IIScoreCounter>(GetInstigator());
+
+	if(TankBody)
+		TankBody->IncrementScore(value);
+}
+
 void ATankTurret::BeginPlay(){
 	Super::BeginPlay();
 
@@ -40,17 +43,23 @@ void ATankTurret::SetUpCannon(TSubclassOf<class ACanon> NewCannonClass){
 	if(NewCannonClass){
 		FActorSpawnParameters Params;
 		Params.Owner = this;
+		Params.Instigator = GetInstigator();
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		Cannon = GetWorld()->SpawnActor<ACanon>(NewCannonClass, Params);
 		Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	}
 }
 
+FRotator ATankTurret::GetTurretMeshRotation() {
+	return TurretMesh->GetComponentRotation();
+}
+
+void ATankTurret::SetTurretMeshRotation(const FRotator value){
+	TurretMesh->SetWorldRotation(value);
+}
+
 void ATankTurret::SetActive(bool bIsActive){
-	if(bIsActive)
-		TurretMesh->SetVisibility(true);
-	else
-		TurretMesh->SetVisibility(false);
+	TurretMesh->SetVisibility(bIsActive);
 }
 
 void ATankTurret::FireMain(){

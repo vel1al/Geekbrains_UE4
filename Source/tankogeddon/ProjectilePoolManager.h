@@ -4,29 +4,43 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-// #include "Containers/Array.h"
-// #include "Tickable.h"
+#include "Containers/Array.h"
+#include "Tickable.h"
 #include "ProjectilePoolManager.generated.h"
 
 
 UCLASS()
-class TANKOGEDDON_API UProjectilePoolManager : public UObject{//, public FTickableGameObject{
+class TANKOGEDDON_API UProjectilePoolManager : public UObject, public FTickableGameObject{
 	GENERATED_BODY()
 	
-	// public:
-	// 	UProjectilePoolManager();
+	public:
+		UProjectilePoolManager();
 
-	// 	virtual void Tick(const float DeltaTime) override;
-	// 	virtual bool IsTickable() const override;
-	// 	virtual TStatId GetStatId() const override;
+		virtual void Tick(const float DeltaTime) override;
+		virtual bool IsTickable() const override;
+		virtual TStatId GetStatId() const override;
 
-	// 	UFUNCTION(BlueprintCallable, Category = "PoolManagment")
-	// 	class AProjectile* GetProjectile();
+		virtual void PostInitProperties() override;
+		//virtual void BeginDestroy() override;
 
-	// private:
-	// 	TArray<class AProjectile*> AllocatedObjects;
+		UFUNCTION(BlueprintCallable)
+		void BeginPlay();
 
-	// 	AProjectile* FirstAvaibleObject = nullptr;
+		TSubclassOf<class AProjectile> GetProjectileClass() const;
+		void SetProjectileClass(TSubclassOf<class AProjectile> ProjectileClass);
 
-	// 	AProjectile* FindNextAvaibleObject();
+		UFUNCTION(BlueprintCallable, Category = "PoolManagment")
+		class AProjectile* GetProjectile();
+
+		UFUNCTION(BlueprintCallable, Category = "PoolManagment")
+		AProjectile* CreateProjectile();
+
+	private:
+		class AProjectile* FirstAvaibleObject = nullptr;
+		class AProjectile* FindNextAvaibleObject();
+
+		UPROPERTY()
+		TArray<class AProjectile*> AllocatedObjects;
+		UPROPERTY()
+		TSubclassOf<class AProjectile> ProjectileClass;
 };

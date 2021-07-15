@@ -34,21 +34,20 @@ class TANKOGEDDON_API ACanon : public AActor{
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|General")
 		float FireReloadTime = 7.f;
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|General")
-		float FireRange = 7.f;
+		float FireDamage = 1.f;
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|General")
+		float FireRange = 1000.f;
 
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Main")
-		float MainFireDamage = 1.f;
+
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Main")
 		float MainFireCooldownTime = 2.f;
 
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Second")
-		float SecondFireDamage = 1.f;
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Second")
 		float SecondFireCooldownTime = 5.f;
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Second")
-		float QueueIntervalTime = 0.25;
+		float SecondIntervalTime = 0.25;
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Attack|Second");
-		int QueueShotsCount = 4;
+		int SecondShotsCount = 4;
 
 		UFUNCTION(BlueprintCallable, Category = "Fire")
 		void FireMain();
@@ -57,6 +56,8 @@ class TANKOGEDDON_API ACanon : public AActor{
 
 		UFUNCTION(BlueprintCallable, Category = "Ammo")
 		void RestoreAmmo();
+		UFUNCTION(BlueprintCallable, Category = "Ammo")
+		void AddAmmo(const int AdditionalAmmoValue);
 
 		UFUNCTION(BlueprintPure, Category = "Fire")
 		bool IsReadyToFire() const;
@@ -72,18 +73,16 @@ class TANKOGEDDON_API ACanon : public AActor{
 
 		void Fire();
 
-		void QueueShot();
+		void SecondShot();
 		void MainShot();
 
 		bool bIsReadyToFire = false;
 	
-		int CurrentQueueShot;
+		int CurrentSecondShot;
 		int CurrentAmmoCount;	
 		int CurrentAmmunitionCount;
 
 		FTimerHandle ReloadTimerHandle;
 		FTimerHandle CooldownTimerHandle;
-		FTimerHandle QueueIntervalTimerHandle;
-
-		//class UProjectilePoolManager* ProjectilePoolManager;
+		FTimerHandle SecondIntervalTimerHandle;
 };
