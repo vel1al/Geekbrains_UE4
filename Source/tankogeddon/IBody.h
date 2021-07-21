@@ -23,7 +23,9 @@ class TANKOGEDDON_API IIBody{
 		virtual void FireMain() = 0;
 		virtual void FireSecond() = 0;
 		
-		virtual void RotateTurretYAxis() = 0;
+		virtual void SetRotateTurretTorqueZAxis(const float InAxisValue) = 0;
+		virtual void SetRotateTorqueZAxis(const float InAxisValue) = 0;
+		virtual void SetMoveTorqueXAxis(const float InAxisValue) = 0;
 
-		//virtual void InvalidateTurret() = 0; doesnt work because of tank turrets changing system
+		virtual FVector GetTurretDirection() const = 0;
 };

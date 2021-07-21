@@ -6,13 +6,12 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/ArrowComponent.h"
+#include <Components/AudioComponent.h>
 #include <Components/BoxComponent.h>
 #include "HealthComponent.h"
 #include "ScoreComponent.h"
-#include "TankPlayerController.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "DrawDebugHelpers.h"
-#include "TankPlayerController.h"
 #include "TankTurret.h"
 #include "Gamestructs.h"
 
@@ -21,11 +20,14 @@ ATankPawn::ATankPawn(){
 	//bShowMouseCursor = true;
 	PrimaryActorTick.bCanEverTick = true;
 
+	USceneComponent* sceeneCpm = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+    RootComponent = sceeneCpm;
+
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
-	RootComponent = BodyMesh;
+	BodyMesh->SetupAttachment(RootComponent);
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArm->SetupAttachment(BodyMesh);
+	SpringArm->SetupAttachment(RootComponent);
 	SpringArm->bDoCollisionTest = false;
 	SpringArm->bInheritPitch = false;
 	SpringArm->bInheritYaw = false;
@@ -44,7 +46,10 @@ ATankPawn::ATankPawn(){
 	HitBox->SetupAttachment(RootComponent);
 
 	TurretSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("TurretSetupPoint"));
-	TurretSetupPoint->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	TurretSetupPoint->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
+	PlayerHitAudioEffect = CreateDefaultSubobject<UAudioComponent>("PlayerHitAudioEffect");
+	PlayerHitAudioEffect->SetupAttachment(RootComponent);
 }
 
 bool ATankPawn::CauseDamage(FDamageData DamageData){
@@ -54,14 +59,13 @@ bool ATankPawn::CauseDamage(FDamageData DamageData){
 void ATankPawn::Die(){
 	GEngine->AddOnScreenDebugMessage(10, 5.f, FColor::Red, TEXT("Tank: died"));
 
-	for(int i = 0; i < TurretSlotsCount; ++i)
-		InvalidateTurret(i);
-
 	Destroy();
 }
 
 void ATankPawn::DamageTook(float DamageValue){
 	GEngine->AddOnScreenDebugMessage(10, 5.f, FColor::Orange, FString::Printf(TEXT("Tank: took damage %f"), DamageValue));
+
+	PlayerHitAudioEffect->Play();
 }
 
 void ATankPawn::IncrementScore(const int value){
@@ -71,10 +75,11 @@ void ATankPawn::IncrementScore(const int value){
 }
 
 void ATankPawn::InvalidateTurret(int RequiredSlot){
-	if (TurretSlots[RequiredSlot]){
-		TurretSlots[RequiredSlot]->Destroy();
-		TurretSlots[RequiredSlot] = nullptr;
-	}
+	if(TurretSlots.IsValidIndex(RequiredSlot))
+		if (TurretSlots[RequiredSlot]){
+			TurretSlots[RequiredSlot]->Destroy();
+			TurretSlots[RequiredSlot] = nullptr;
+		}
 }
 
 void ATankPawn::SetUpCannon(TSubclassOf<ACanon> NewCannonClass){
@@ -135,8 +140,6 @@ ATankTurret* ATankPawn::GetCurrentActiveTurret(){
 // Called when the game starts or when spawned
 void ATankPawn::BeginPlay(){
 	Super::BeginPlay();
-
-	TankController = Cast<ATankPlayerController>(GetController());
 	
 	TurretSlots.SetNumZeroed(TurretSlotsCount);
 
@@ -151,6 +154,13 @@ void ATankPawn::EndPlay(EEndPlayReason::Type Reason){
 	Super::EndPlay(Reason);
 }
 
+void ATankPawn::Destroyed(){
+	Super::Destroyed();
+
+	for(int i = 0; i < TurretSlotsCount; ++i)
+		InvalidateTurret(i);
+}
+
 void ATankPawn::MoveTankXAxis(const float DeltaTime){
 	FVector CurrentLocation = GetActorLocation();
 	FVector MoveXAxisOffset = GetActorForwardVector() * TankMoveXAxisSpeed * CurrentTankMoveTorqueXAxis * DeltaTime;
@@ -158,25 +168,47 @@ void ATankPawn::MoveTankXAxis(const float DeltaTime){
 	SetActorLocation(CurrentLocation + MoveXAxisOffset);
 }
 
-void ATankPawn::RotateTankYAxis(const float DeltaTime){
+void ATankPawn::RotateTankZAxis(const float DeltaTime){
 	FRotator CurrentRotation = GetActorRotation();
-	CurrentTankRotationYAxis = FMath::Lerp(CurrentTankRotationYAxis, CurrentTankRotationTorqueYAxis, TankRotationYAxisSensivity);
-	float RotationYAxisOffset = TankRotationYAxisSpeed * CurrentTankRotationYAxis * DeltaTime;
+	CurrentTankRotationZAxis = FMath::Lerp(CurrentTankRotationZAxis, CurrentTankRotationTorqueZAxis, TankRotationZAxisSensivity);
 
-	float YawRotation = CurrentRotation.Yaw + RotationYAxisOffset;
+	float RotationZAxisOffset = TankRotationZAxisSpeed * CurrentTankRotationZAxis * DeltaTime;
+	float YawRotation = CurrentRotation.Yaw + RotationZAxisOffset;
+
 	SetActorRotation(FRotator(0.f, YawRotation, 0.f));
 }
 
-void ATankPawn:: RotateTurretYAxis(){
-	if(TankController && TurretSlots[CurrentTurretSlot]){
-		FVector ChachedMousePosition = TankController->GetMousePos();
-		FRotator TargetTurretRotation = UKismetMathLibrary::FindLookAtRotation(TurretSlots[CurrentTurretSlot]->GetActorLocation(), ChachedMousePosition);
-		FRotator CurrentTurretRotation = TurretSlots[CurrentTurretSlot]->GetTurretMeshRotation();
-		
-		TargetTurretRotation.Pitch = CurrentTurretRotation.Pitch;
-		TargetTurretRotation.Roll = CurrentTurretRotation.Roll;
+void ATankPawn::RotateTurretZAxis(const float DeltaTime){
+	if(TurretSlots[CurrentTurretSlot]){
+		if(!(bIsRequringRotateToStart)){
+			FRotator CurrentRotation = TurretSlots[CurrentTurretSlot]->GetTurretMeshRotation();
+			CurrentTurretRotationZAxis = FMath::Lerp(CurrentTurretRotationZAxis, CurrentTurretRotationTorqueZAxis, TurretRotationSensitivity);
 
-		TurretSlots[CurrentTurretSlot]->SetTurretMeshRotation(FMath::Lerp(CurrentTurretRotation, TargetTurretRotation, TurretRotationSensitivity));
+			float RotationZAxisOffset = TurretRotationZAxisSpeed * CurrentTurretRotationZAxis * DeltaTime;
+			float YawRotation = CurrentRotation.Yaw + RotationZAxisOffset;
+
+			TurretSlots[CurrentTurretSlot]->SetTurretMeshRotation(FRotator(0.f, YawRotation, 0.f));
+		}
+
+		else{
+			FRotator CurrentRotation = TurretSlots[CurrentTurretSlot]->GetTurretMeshRotation();
+
+			UE_LOG(LogTemp, Display, TEXT("curr rot %f"), CurrentRotation.Yaw);
+
+			if(!(FMath::IsNearlyZero(CurrentRotation.Yaw))){
+				if(FMath::Abs(CurrentRotation.Yaw) > (TurretRotationZAxisSpeed * DeltaTime))
+					CurrentTurretRotationZAxis = FMath::Lerp(CurrentTurretRotationZAxis, 1.f, TurretRotationSensitivity);
+				else
+					CurrentTurretRotationZAxis = FMath::Lerp(CurrentTurretRotationZAxis, 0.f, TurretRotationSensitivity);
+
+				float RotationZAxisOffset = TurretRotationZAxisSpeed * CurrentTurretRotationZAxis * DeltaTime;
+				float YawRotation = CurrentRotation.Yaw - RotationZAxisOffset;
+						
+				TurretSlots[CurrentTurretSlot]->SetTurretMeshRotation(FRotator(0.f, YawRotation, 0.f));
+
+				UE_LOG(LogTemp, Display, TEXT("rotating turret to the start %f"), YawRotation);
+			}
+		}
 	}
 }
 
@@ -185,12 +217,9 @@ void ATankPawn::Tick(const float DeltaTime){
 	Super::Tick(DeltaTime);
 
 	MoveTankXAxis(DeltaTime);
-	RotateTankYAxis(DeltaTime);
-	RotateTurretYAxis();
-}
+	RotateTankZAxis(DeltaTime);
 
-void ATankPawn::SetMoveTorqueXAxis(const float InAxisValue){
-	CurrentTankMoveTorqueXAxis = InAxisValue;
+	RotateTurretZAxis(DeltaTime);
 }
 
 float ATankPawn::GetMoveTorqueXAxis() const{
@@ -201,15 +230,45 @@ float ATankPawn::GetMoveSpeedXAxis() const{
 	return TankMoveXAxisSpeed;
 }
 
-void ATankPawn::SetRotateTorqueYAxis(const float InAxisValue){
-	CurrentTankRotationTorqueYAxis = InAxisValue;
+void ATankPawn::SetRotateTurretTorqueZAxis(const float InAxisValue){
+	CurrentTurretRotationTorqueZAxis = InAxisValue;
+
+	bIsRequringRotateToStart = false;
+}
+
+void ATankPawn::SetRotateTorqueZAxis(const float InAxisValue){
+	CurrentTankRotationTorqueZAxis = InAxisValue;
+}
+
+void ATankPawn::SetMoveTorqueXAxis(const float InAxisValue){
+	CurrentTankMoveTorqueXAxis = InAxisValue;
+}
+
+FVector ATankPawn::GetTurretDirection() const {
+	if(TurretSlots[CurrentTurretSlot])
+		return TurretSlots[CurrentTurretSlot]->GetTurretMeshDirection();
+
+	return FVector(0.f);
+}
+
+FVector ATankPawn::GetLookFromPosition() const {
+	if(TurretSlots[CurrentTurretSlot])
+		return TurretSlots[CurrentTurretSlot]->GetActorLocation();
+	
+	return FVector(0.f);
+}
+
+void ATankPawn::RotateTurretToStart(){
+	bIsRequringRotateToStart = true;
+
+	CurrentTurretRotationTorqueZAxis = 0;
 }
 
 void ATankPawn::FireMain(){
-	if(TurretSlots[CurrentTurretSlot] && TankController)
+	if(TurretSlots[CurrentTurretSlot])
 		TurretSlots[CurrentTurretSlot]->FireMain();
 }
 void ATankPawn::FireSecond(){
-	if(TurretSlots[CurrentTurretSlot] && TankController)
+	if(TurretSlots[CurrentTurretSlot])
 		TurretSlots[CurrentTurretSlot]->FireSecond();
 }

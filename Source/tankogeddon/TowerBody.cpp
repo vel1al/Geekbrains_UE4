@@ -2,7 +2,6 @@
 
 
 #include "TowerBody.h"
-//#include "TankPawn.h"
 #include "TowerTurret.h"
 #include "Components/StaticMeshComponent.h"
 #include <Components/BoxComponent.h>
@@ -90,13 +89,10 @@ void ATowerBody::Tick(const float DeltaTime){
 	AngleToPlayer = GetAngleToPlayer();
 
     if(AngleToPlayer < Accurency)
-        FireMain();
+        Fire();
 }
 
 void ATowerBody::RotateTurretYAxis(){
-//	FVector TargetLocation = PlayerPawn->GetActorLocation() + PlayerPawn->GetActorForwardVector() * PlayerPawn->GetMoveTorqueXAxis() *
-//	                         PlayerPawn->GetMoveSpeedXAxis() * (AngleToPlayer/ TargetingSpeed);
-
 	FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(Turret->GetActorLocation(), PlayerPawn->GetActorLocation());
 	FRotator CurrentRotation = Turret->GetTurretMeshRotation();
 
@@ -107,26 +103,31 @@ void ATowerBody::RotateTurretYAxis(){
 }
 
 bool ATowerBody::CheckRange(){
-    return FVector::Distance(PlayerPawn->GetActorLocation(), GetActorLocation()) <= TargetingRange;
+	if(PlayerPawn)
+    	return FVector::Distance(PlayerPawn->GetActorLocation(), GetActorLocation()) <= TargetingRange;
+
+	return false;
 }
 
-void ATowerBody::FireMain(){
+void ATowerBody::Fire(){
 	if(Turret)
 		Turret->FireMain();
-}
-
-void ATowerBody::FireSecond(){
-	if(Turret)
-		Turret->FireSecond();
 }
 
 int ATowerBody::GetScoreValue() const{
 	return ScoreValue;
 }
 
+FVector ATowerBody::GetTurretDirection() const {
+	return Turret->GetTurretMeshDirection();
+}
+
 float ATowerBody::GetAngleToPlayer() {
-	FVector TargetingDirection = Turret->GetTurretMeshForwardVector();
-    FVector DirectionToPlayer = PlayerPawn->GetActorLocation() - Turret->GetActorLocation();
+	if(!(PlayerPawn))
+		return 0.f;
+
+	FVector TargetingDirection = GetTurretDirection();
+    FVector DirectionToPlayer = PlayerPawn->GetActorLocation() - GetActorLocation();
 
     DirectionToPlayer.Normalize();
 

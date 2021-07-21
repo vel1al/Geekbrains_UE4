@@ -50,12 +50,20 @@ void ATankTurret::SetUpCannon(TSubclassOf<class ACanon> NewCannonClass){
 	}
 }
 
-FRotator ATankTurret::GetTurretMeshRotation() {
-	return TurretMesh->GetComponentRotation();
+FRotator ATankTurret::GetTurretMeshRotation() const {
+	return TurretMesh->GetRelativeRotation();
+}
+
+FVector ATankTurret::GetTurretMeshDirection() const {
+	return TurretMesh->GetForwardVector();
+}
+
+FVector ATankTurret::GetTurretMeshLocation() const {
+	return TurretMesh->GetComponentLocation();
 }
 
 void ATankTurret::SetTurretMeshRotation(const FRotator value){
-	TurretMesh->SetWorldRotation(value);
+	TurretMesh->SetRelativeRotation(value);
 }
 
 void ATankTurret::SetActive(bool bIsActive){

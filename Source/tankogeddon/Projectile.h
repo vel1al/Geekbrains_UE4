@@ -14,6 +14,9 @@ class TANKOGEDDON_API AProjectile : public AActor{
 	public:
 		AProjectile();
 
+		DECLARE_EVENT(AProjectile, FOnElminated)
+		FOnElminated OnElminated;
+
 		void Start(FProjectilePreStartData StartData);
 
 		virtual void BeginPlay() override;		
@@ -33,10 +36,8 @@ class TANKOGEDDON_API AProjectile : public AActor{
 
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 		float MoveSpeed = 100.f;
-		
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 		float MoveRate = 0.005f;
-
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Damage")
 		float ProjectileDamage = 1.f;
 

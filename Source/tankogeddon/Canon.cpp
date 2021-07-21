@@ -10,6 +10,9 @@
 #include "ProjectilePoolManagerSubSystem.h"
 #include "IDamakeTaker.h"
 #include "IScoreCounter.h"
+#include <Particles/ParticleSystemComponent.h>
+#include <Components/AudioComponent.h>
+#include <Camera/CameraShake.h>
 
 
 ACanon::ACanon(){
@@ -23,6 +26,15 @@ ACanon::ACanon(){
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>("SpawnPoint");
 	ProjectileSpawnPoint->SetupAttachment(Mesh);
+
+	ShootEffect = CreateDefaultSubobject<UParticleSystemComponent>("ShootEffect");
+	ShootEffect->SetupAttachment(ProjectileSpawnPoint);
+
+    ShootAudioEffect = CreateDefaultSubobject<UAudioComponent>("ShootAudioEffect");
+	ShootAudioEffect->SetupAttachment(ProjectileSpawnPoint);
+
+	ElminatedAudioEffect = CreateDefaultSubobject<UAudioComponent>("ElminatedAudioEffect");
+	ElminatedAudioEffect->SetupAttachment(ProjectileSpawnPoint);
 }
 
 void ACanon::BeginPlay(){
@@ -87,8 +99,29 @@ bool ACanon::IsReadyToFire() const {
 	return bIsReadyToFire;
 }
 
+void ACanon::OnEmenyElminated(){
+	ElminatedAudioEffect->Play();
+}
+
 void ACanon::Fire(){
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Fire: ammunition %d, ammo %d"), CurrentAmmunitionCount, CurrentAmmoCount));
+
+	ShootEffect->ActivateSystem();
+	ShootAudioEffect->Play();
+
+	if (GetOwner() && GetOwner() == GetWorld()->GetFirstPlayerController()->GetPawn()){
+        if (ShootForceEffect){
+            FForceFeedbackParameters ShootForceEffectParams;
+
+            ShootForceEffectParams.bLooping = false;
+            ShootForceEffectParams.Tag = "ShootForceEffectParams";
+
+            GetWorld()->GetFirstPlayerController()->ClientPlayForceFeedback(ShootForceEffect, ShootForceEffectParams);
+        }
+
+        if (ShootShake)
+            GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(ShootShake);
+    }
 
 	if (Type == ECannonType::FireProjectile){
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Fire: type = projectile"));
@@ -101,6 +134,8 @@ void ACanon::Fire(){
 			ProjectileData.Rotation = ProjectileSpawnPoint->GetComponentRotation();
 			ProjectileData.Instigator = GetInstigator();
 			ProjectileData.CanonDamage = FireDamage;
+
+			Projectile->OnElminated.AddUObject(this, &ACanon::OnEmenyElminated);
 
 			Projectile->SetMoveRange(FireRange);
 			Projectile->Start(ProjectileData);
@@ -139,6 +174,8 @@ void ACanon::Fire(){
 
 					if(ScoredActor)
 						ScoredActor->IncrementScore(1);
+
+					OnEmenyElminated();
 				}
 			}
 		} 

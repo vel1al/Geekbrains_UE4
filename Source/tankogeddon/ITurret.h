@@ -28,6 +28,8 @@ class TANKOGEDDON_API IITurret{
 		virtual void FireMain() = 0;
 		virtual void FireSecond() = 0;
 
-		virtual FRotator GetTurretMeshRotation() = 0;
+		virtual FVector GetTurretMeshDirection() const = 0;
+		
+		virtual FRotator GetTurretMeshRotation() const = 0;
 		virtual void SetTurretMeshRotation(const FRotator value) = 0;
 };

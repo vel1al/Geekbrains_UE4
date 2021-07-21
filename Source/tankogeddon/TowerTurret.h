@@ -23,11 +23,11 @@ class TANKOGEDDON_API ATowerTurret : public AActor, public IITurret{
 		void FireMain() override;
 		UFUNCTION(BlueprintCallable, Category = "Fire")
 		void FireSecond() override;
-		UFUNCTION(BlueprintCallable, Category = "Fire")
-		FVector GetTurretMeshForwardVector() const;
 
 		UFUNCTION(BlueprintCallable, Category = "Movement")
-		FRotator GetTurretMeshRotation() override;
+		FVector GetTurretMeshDirection() const override;
+		UFUNCTION(BlueprintCallable, Category = "Movement")
+		FRotator GetTurretMeshRotation() const override;
 		UFUNCTION(BlueprintCallable, Category = "Movement")
 		void SetTurretMeshRotation(const FRotator value) override;
 

@@ -19,6 +19,17 @@ class TANKOGEDDON_API ACanon : public AActor{
 		class UStaticMeshComponent* Mesh;
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		class UArrowComponent* ProjectileSpawnPoint;
+		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		class UParticleSystemComponent* ShootEffect;
+    	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    	class UAudioComponent* ShootAudioEffect;
+		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+    	class UAudioComponent* ElminatedAudioEffect;
+
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects")
+		class UForceFeedbackEffect* ShootForceEffect;
+    	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Effects")
+    	TSubclassOf<class UMatineeCameraShake> ShootShake;
 
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Cannon")
 		TSubclassOf<class AProjectile> ProjectileClass;
@@ -53,14 +64,15 @@ class TANKOGEDDON_API ACanon : public AActor{
 		void FireMain();
 		UFUNCTION(BlueprintCallable, Category = "Fire")
 		void FireSecond();
+		UFUNCTION(BlueprintPure, Category = "Fire")
+		bool IsReadyToFire() const;
+		UFUNCTION(BlueprintCallable, Category = "Fire")
+		void OnEmenyElminated();
 
 		UFUNCTION(BlueprintCallable, Category = "Ammo")
 		void RestoreAmmo();
 		UFUNCTION(BlueprintCallable, Category = "Ammo")
 		void AddAmmo(const int AdditionalAmmoValue);
-
-		UFUNCTION(BlueprintPure, Category = "Fire")
-		bool IsReadyToFire() const;
 
 	protected:
 		// Called when the game starts or when spawned

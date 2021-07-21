@@ -15,12 +15,13 @@ void ATankPlayerController::SetupInputComponent(){
     Super::SetupInputComponent();
 
     InputComponent->BindAxis("MoveXAxis", this, &ATankPlayerController::MoveXAxis);
-    InputComponent->BindAxis("RotateYAxis", this, &ATankPlayerController::RotateYAxis);
+    InputComponent->BindAxis("RotateZAxis", this, &ATankPlayerController::RotateZAxis);
 
     InputComponent->BindAction("FireMain", IE_Pressed, this, &ATankPlayerController::FireMain);
     InputComponent->BindAction("FireSecond", IE_Pressed, this, &ATankPlayerController::FireSecond);
 
     InputComponent->BindAction("ChangeTurret", IE_Pressed, this, &ATankPlayerController::ChangeTurret);
+    InputComponent->BindAxis("RotateTurretZAxis");
 }
 
 void ATankPlayerController::MoveXAxis(const float AxisValue){
@@ -28,9 +29,9 @@ void ATankPlayerController::MoveXAxis(const float AxisValue){
         TankPawn->SetMoveTorqueXAxis(AxisValue);
     }
 }
-void ATankPlayerController::RotateYAxis(const float AxisValue){
+void ATankPlayerController::RotateZAxis(const float AxisValue){
     if (TankPawn){
-        TankPawn->SetRotateTorqueYAxis(AxisValue);
+        TankPawn->SetRotateTorqueZAxis(AxisValue);
     }
 }
 
@@ -60,15 +61,50 @@ FVector ATankPlayerController::GetMousePos() const{
 void ATankPlayerController::Tick(float DeltaSeconds){
     Super::Tick(DeltaSeconds);
 
-    FVector MousePosition, MouseDirection;
-    DeprojectMousePositionToWorld(MousePosition, MouseDirection);
 
     if (TankPawn){
-        FVector TankPosition = TankPawn->GetActorLocation();
-        CachedMousePosition = MousePosition - TankPosition;
-        CachedMousePosition.Z = 0;
-        CachedMousePosition.Normalize();
-        CachedMousePosition = TankPosition + CachedMousePosition * 1000.f;
+        bShowMouseCursor = bIsControllingByMouse;
+
+        FVector MousePosition, MouseDirection;
+        DeprojectMousePositionToWorld(MousePosition, MouseDirection);
+
+        float TurretRotationZAxis = GetInputAxisValue("RotateTurretZAxis");
+        if(FMath::IsNearlyZero(TurretRotationZAxis) && (MousePosition != PreviousMousePosition || bIsControllingByMouse)){
+            bIsControllingByMouse = true;
+
+            FVector TankPosition = TankPawn->GetActorLocation();
+            FVector TankTurretDirection = TankPawn->GetTurretDirection();
+
+            CachedMousePosition = MousePosition - TankPosition;
+            CachedMousePosition.Z = 0;
+
+            CachedMousePosition.Normalize();
+
+            float AngleOfReferenceTurret = FMath::RadiansToDegrees(FMath::Atan2(TankTurretDirection.Y, TankTurretDirection.X));
+            float AngleOfReferenceMouse = FMath::RadiansToDegrees(FMath::Atan2(CachedMousePosition.Y, CachedMousePosition.X));
+
+            float SignedAngle = AngleOfReferenceMouse - AngleOfReferenceTurret;
+
+            if (SignedAngle > 180) SignedAngle -= 360;
+            if (SignedAngle <= -180) SignedAngle += 360;
+
+            float TurretRotationTorque = 0;
+            if(FMath::Abs(SignedAngle) > 5){
+                if(SignedAngle > 0)
+                    TurretRotationTorque = 1;
+                else
+                    TurretRotationTorque = -1;
+            }
+
+            TankPawn->SetRotateTurretTorqueZAxis(TurretRotationTorque);
+        } 
+        else{
+            TankPawn->SetRotateTurretTorqueZAxis(TurretRotationZAxis);
+
+            bIsControllingByMouse = false;
+        }
+
+        PreviousMousePosition = MousePosition;
     }
 }
 

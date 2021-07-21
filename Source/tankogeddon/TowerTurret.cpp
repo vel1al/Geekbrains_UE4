@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 
 #include "TowerTurret.h"
 #include "Components/ArrowComponent.h"
@@ -47,11 +45,11 @@ void ATowerTurret::EndPlay(EEndPlayReason::Type Reason){
 	Super::EndPlay(Reason);
 }
 
-FRotator ATowerTurret::GetTurretMeshRotation() {
+FRotator ATowerTurret::GetTurretMeshRotation() const {
 	return TurretMesh->GetComponentRotation();
 }
 
-FVector ATowerTurret::GetTurretMeshForwardVector() const{
+FVector ATowerTurret::GetTurretMeshDirection() const {
 	return TurretMesh->GetForwardVector();
 }
 

@@ -24,14 +24,18 @@ class TANKOGEDDON_API ATankTurret : public AActor, public IITurret, public IISco
 		void SetActive(bool bIsActive);
 		UFUNCTION(BlueprintCallable, Category = "Cannon")
 		void RestoreAmmo() override;
-
+	
 		UFUNCTION(BlueprintCallable, Category = "Fire")
 		void FireMain() override;
 		UFUNCTION(BlueprintCallable, Category = "Fire")
 		void FireSecond() override;
 
 		UFUNCTION(BlueprintCallable, Category = "Movement")
-		FRotator GetTurretMeshRotation() override;
+		FVector GetTurretMeshDirection() const override;
+		UFUNCTION(BlueprintCallable, Category = "Movement")
+		FVector GetTurretMeshLocation() const;
+		UFUNCTION(BlueprintCallable, Category = "Movement")
+		FRotator GetTurretMeshRotation() const override;
 		UFUNCTION(BlueprintCallable, Category = "Movement")
 		void SetTurretMeshRotation(const FRotator value) override;
 		

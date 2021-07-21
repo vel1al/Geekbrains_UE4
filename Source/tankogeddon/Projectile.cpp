@@ -104,6 +104,9 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 
             if(ScoredActor && EmenyActor)
                 ScoredActor->IncrementScore(EmenyActor->GetScoreValue());
+
+            if (OnElminated.IsBound())
+                OnElminated.Broadcast();
         }
 
         End();

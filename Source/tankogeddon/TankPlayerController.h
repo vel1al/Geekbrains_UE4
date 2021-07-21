@@ -25,7 +25,7 @@ class TANKOGEDDON_API ATankPlayerController : public APlayerController{
 
 	private:
 		void MoveXAxis(float AxisValue);
-		void RotateYAxis(float AxisValue);
+		void RotateZAxis(float AxisValue);
 		
 		void FireMain();
 		void FireSecond();
@@ -36,4 +36,7 @@ class TANKOGEDDON_API ATankPlayerController : public APlayerController{
 		class ATankPawn* TankPawn;
 
 		FVector CachedMousePosition;
+		FVector PreviousMousePosition;
+
+		bool bIsControllingByMouse;
 };

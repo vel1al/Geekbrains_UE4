@@ -11,7 +11,7 @@
 
 
 UCLASS()
-class TANKOGEDDON_API ATowerBody : public APawn, public IIBody, public IIDamakeTaker, public IIEmeny{
+class TANKOGEDDON_API ATowerBody : public APawn, public IIDamakeTaker, public IIEmeny{
 		GENERATED_BODY()
 		
 	public:	
@@ -49,11 +49,12 @@ class TANKOGEDDON_API ATowerBody : public APawn, public IIBody, public IIDamakeT
 		
 		UFUNCTION(BlueprintCallable, Category = "Turret")
 		void SetUpTurret(TSubclassOf<class ATowerTurret> NewTurretClass);
+		UFUNCTION(BlueprintCallable, Category = "Turret")
+		FVector GetTurretDirection() const;
+		UFUNCTION(BlueprintCallable, Category = "Turret")
+		void RotateTurretYAxis();
+	
 
-		void Tick(const float DeltaTime) override;
-		
-		void RotateTurretYAxis() override;
-		
 		UFUNCTION(BlueprintCallable, Category = "Health")
 		bool CauseDamage(FDamageData DamageData) override;
 		UFUNCTION(BlueprintCallable, Category = "Health")
@@ -63,6 +64,7 @@ class TANKOGEDDON_API ATowerBody : public APawn, public IIBody, public IIDamakeT
 		int GetScoreValue() const override;
 
 	protected:
+		void Tick(const float DeltaTime) override;
 		virtual void BeginPlay() override;
 		virtual void EndPlay(EEndPlayReason::Type Reason) override;
 
@@ -71,8 +73,7 @@ class TANKOGEDDON_API ATowerBody : public APawn, public IIBody, public IIDamakeT
 
 		bool CheckRange();
 
-		void FireMain() override;
-		void FireSecond() override;
+		void Fire();
 
 		void InvalidateTurret();
 
