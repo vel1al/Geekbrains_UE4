@@ -7,27 +7,19 @@ void ATankAIController::BeginPlay(){
     Super::BeginPlay();
 
 
-    ControllingTank = Cast<ATankPawn>(GetPawn());
-
-    if (ControllingTank && ControllingTank->LocalPatrollingPoints.Num() > 0){
-        LastPatroolPointIndex = 0;
-
-        FVector TankLocation = ControllingTank->GetActorLocation();
-
-        UE_LOG(LogTemp, Display, TEXT("%d"), ControllingTank->LocalPatrollingPoints.Num());
-
-        for (const auto& element : ControllingTank->LocalPatrollingPoints)
-            GlobalPatrollingPoints.Add(TankLocation + element);    
-    }
+    Initialize();
 }
 
 void ATankAIController::Tick(float DeltaTime){
     Super::Tick(DeltaTime);
 
 
-    if (!ControllingTank || LastPatroolPointIndex == INDEX_NONE)
-        return;
-    
+    if (!ControllingTank || LastPatroolPointIndex == INDEX_NONE){
+        Initialize();
+
+        if (!ControllingTank || LastPatroolPointIndex == INDEX_NONE)
+            return;
+    }
 
     FVector ControllingTankLocation = ControllingTank->GetActorLocation();
     if (FVector::Distance(CurrentPatroolPoint, ControllingTankLocation) <= ControllingTank->TankMovementAccurancy)
@@ -91,7 +83,6 @@ void ATankAIController::Tick(float DeltaTime){
         if (bPlayerVisibility){
             FVector DirectionToPlayer = TargetTankLocation - ControllingTankLocation;
             FVector TurretDirection = ControllingTank->GetTurretDirection();
-            //FVector TurretDirection = ControllingTank->GetLookFromPosition();
 
             DirectionToPlayer.Normalize();
             
@@ -123,4 +114,19 @@ void ATankAIController::Tick(float DeltaTime){
     }
     else
         ControllingTank->RotateTurretToStart();
+}
+
+void ATankAIController::Initialize() {
+    ControllingTank = Cast<ATankPawn>(GetPawn());
+
+    if (ControllingTank && ControllingTank->LocalPatrollingPoints.Num() > 0){
+        LastPatroolPointIndex = 0;
+
+        FVector TankLocation = ControllingTank->GetActorLocation();
+
+        UE_LOG(LogTemp, Display, TEXT("%d"), ControllingTank->LocalPatrollingPoints.Num());
+
+        for (const auto& element : ControllingTank->LocalPatrollingPoints)
+            GlobalPatrollingPoints.Add(TankLocation + element);    
+    }
 }

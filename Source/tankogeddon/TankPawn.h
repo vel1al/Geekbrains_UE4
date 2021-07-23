@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -22,6 +20,8 @@ class TANKOGEDDON_API ATankPawn : public APawn, public IIBody, public IIDamakeTa
 		bool CauseDamage(FDamageData DamageData) override;
 		UFUNCTION(BlueprintCallable, Category = "Tank|Health")
 		void Die() override;
+		UFUNCTION(BlueprintCallable, Category = "Tank|Health")
+		bool IsDestroyed() const override;
 
 		virtual void Tick(const float DeltaTime) override;
 		
@@ -75,6 +75,11 @@ class TANKOGEDDON_API ATankPawn : public APawn, public IIBody, public IIDamakeTa
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
     	class UAudioComponent* PlayerHitAudioEffect;
 
+		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Effects")
+    	class USoundBase* DestroyedAudioEffect;
+		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Effects")
+		class UParticleSystem* DestroyedEffect;
+		
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 		TSubclassOf<class ATankTurret> DefaultTurretClass;
 
@@ -119,6 +124,7 @@ class TANKOGEDDON_API ATankPawn : public APawn, public IIBody, public IIDamakeTa
 		int CurrentScore = 0;
 
 		bool bIsRequringRotateToStart = false;
+		bool bIsDestroyed = false;
 
 		float CurrentTankMoveTorqueXAxis = 0.f;
 		float CurrentTankRotationTorqueZAxis = 0.f;

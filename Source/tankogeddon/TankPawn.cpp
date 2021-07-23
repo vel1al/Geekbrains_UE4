@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TankPawn.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -11,13 +8,14 @@
 #include "HealthComponent.h"
 #include "ScoreComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
 #include "TankTurret.h"
 #include "Gamestructs.h"
+#include <Particles/ParticleSystemComponent.h>
 
-// Sets default values
+
 ATankPawn::ATankPawn(){
-	//bShowMouseCursor = true;
 	PrimaryActorTick.bCanEverTick = true;
 
 	USceneComponent* sceeneCpm = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
@@ -57,20 +55,19 @@ bool ATankPawn::CauseDamage(FDamageData DamageData){
 }
 
 void ATankPawn::Die(){
-	GEngine->AddOnScreenDebugMessage(10, 5.f, FColor::Red, TEXT("Tank: died"));
+	bIsDestroyed = true;
+
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyedEffect, GetActorTransform());
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), DestroyedAudioEffect, GetActorLocation());
 
 	Destroy();
 }
 
 void ATankPawn::DamageTook(float DamageValue){
-	GEngine->AddOnScreenDebugMessage(10, 5.f, FColor::Orange, FString::Printf(TEXT("Tank: took damage %f"), DamageValue));
-
 	PlayerHitAudioEffect->Play();
 }
 
 void ATankPawn::IncrementScore(const int value){
-	UE_LOG(LogTemp, Display, TEXT("Tank: took score %d"), value);
-
 	ScoreComponent->IncrementScore(value);
 }
 
@@ -115,8 +112,6 @@ void ATankPawn::SetUpTurret(TSubclassOf<ATankTurret> NewTurretClass){
 }
  
 void ATankPawn::ChangeTurret(){
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Tank: changed turret slot to %d"), CurrentTurretSlot));
-
 	ATankTurret* CurrentActiveTurret = GetCurrentActiveTurret();
 	
 	if(!(TurretSlots.IsValidIndex(++CurrentTurretSlot)))
@@ -137,7 +132,6 @@ ATankTurret* ATankPawn::GetCurrentActiveTurret(){
 	return nullptr;
 }
 
-// Called when the game starts or when spawned
 void ATankPawn::BeginPlay(){
 	Super::BeginPlay();
 	
@@ -193,8 +187,6 @@ void ATankPawn::RotateTurretZAxis(const float DeltaTime){
 		else{
 			FRotator CurrentRotation = TurretSlots[CurrentTurretSlot]->GetTurretMeshRotation();
 
-			UE_LOG(LogTemp, Display, TEXT("curr rot %f"), CurrentRotation.Yaw);
-
 			if(!(FMath::IsNearlyZero(CurrentRotation.Yaw))){
 				if(FMath::Abs(CurrentRotation.Yaw) > (TurretRotationZAxisSpeed * DeltaTime))
 					CurrentTurretRotationZAxis = FMath::Lerp(CurrentTurretRotationZAxis, 1.f, TurretRotationSensitivity);
@@ -205,14 +197,11 @@ void ATankPawn::RotateTurretZAxis(const float DeltaTime){
 				float YawRotation = CurrentRotation.Yaw - RotationZAxisOffset;
 						
 				TurretSlots[CurrentTurretSlot]->SetTurretMeshRotation(FRotator(0.f, YawRotation, 0.f));
-
-				UE_LOG(LogTemp, Display, TEXT("rotating turret to the start %f"), YawRotation);
 			}
 		}
 	}
 }
 
-// Called every frame
 void ATankPawn::Tick(const float DeltaTime){
 	Super::Tick(DeltaTime);
 
@@ -271,4 +260,8 @@ void ATankPawn::FireMain(){
 void ATankPawn::FireSecond(){
 	if(TurretSlots[CurrentTurretSlot])
 		TurretSlots[CurrentTurretSlot]->FireSecond();
+}
+
+bool ATankPawn::IsDestroyed() const {
+    return bIsDestroyed;
 }

@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -13,31 +11,30 @@ class TANKOGEDDON_API ATurretBox : public AActor{
 	public:	
 		ATurretBox();
 
-		virtual void Tick(const float DeltaTime) override;
-		
-
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		UStaticMeshComponent* Mesh;
+		class UStaticMeshComponent* Mesh;
+		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+		class USpotLightComponent* Light;
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Box|Turret")
 		TSubclassOf<class ATankTurret> TurretClass;
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Box|Movement")
 		float RotationRatio;
-
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Box|Movement")
 		float FlyingHeightRatio;
-
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Box|Movement")
 		float FlyingSpeedRatio;
 
 	protected:
+		virtual void BeginPlay() override;
+		virtual void Tick(const float DeltaTime) override;
+
+	private:
 		float SinDegrees = 1.f;
 
 		FVector ConstLocation;
 		FRotator ConstRotation;
-
-		virtual void BeginPlay() override;
 
 		UFUNCTION()
 		void OnMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

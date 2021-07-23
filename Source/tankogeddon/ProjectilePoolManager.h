@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -21,7 +19,7 @@ class TANKOGEDDON_API UProjectilePoolManager : public UObject, public FTickableG
 		virtual TStatId GetStatId() const override;
 
 		virtual void PostInitProperties() override;
-		//virtual void BeginDestroy() override;
+		virtual void BeginDestroy() override;
 
 		UFUNCTION(BlueprintCallable)
 		void BeginPlay();

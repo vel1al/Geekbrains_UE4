@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -12,7 +10,6 @@ class TANKOGEDDON_API ACanon : public AActor{
 		GENERATED_BODY()
 		
 	public:	
-		// Sets default values for this actor's properties
 		ACanon();
 
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -33,12 +30,10 @@ class TANKOGEDDON_API ACanon : public AActor{
 
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Cannon")
 		TSubclassOf<class AProjectile> ProjectileClass;
-
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Cannon");
 		int AmmunitionCount = 300;
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Cannon");
 		int AmmoCount = 10;
-
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire|Cannon")
 		ECannonType Type = ECannonType::FireProjectile;
 
@@ -66,8 +61,6 @@ class TANKOGEDDON_API ACanon : public AActor{
 		void FireSecond();
 		UFUNCTION(BlueprintPure, Category = "Fire")
 		bool IsReadyToFire() const;
-		UFUNCTION(BlueprintCallable, Category = "Fire")
-		void OnEmenyElminated();
 
 		UFUNCTION(BlueprintCallable, Category = "Ammo")
 		void RestoreAmmo();
@@ -75,7 +68,6 @@ class TANKOGEDDON_API ACanon : public AActor{
 		void AddAmmo(const int AdditionalAmmoValue);
 
 	protected:
-		// Called when the game starts or when spawned
 		virtual void BeginPlay() override;
 		virtual void EndPlay(EEndPlayReason::Type Reason) override;
 

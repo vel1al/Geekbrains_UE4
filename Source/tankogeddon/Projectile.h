@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -13,9 +11,6 @@ class TANKOGEDDON_API AProjectile : public AActor{
 		
 	public:
 		AProjectile();
-
-		DECLARE_EVENT(AProjectile, FOnElminated)
-		FOnElminated OnElminated;
 
 		void Start(FProjectilePreStartData StartData);
 
@@ -57,5 +52,6 @@ class TANKOGEDDON_API AProjectile : public AActor{
 		void Move();
 
 		UFUNCTION()
-		void OnMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		void OnMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, 
+								int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

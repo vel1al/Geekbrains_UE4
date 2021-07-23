@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -15,8 +13,6 @@ class TANKOGEDDON_API UProjectilePoolManagerSubSystem : public UGameInstanceSubs
 	public:
 		UFUNCTION(BlueprintCallable)
 		class UProjectilePoolManager* GetProjectilePoolManager(TSubclassOf<class AProjectile> ProjectileClass);
-
-		virtual void Deinitialize() override;
 
 	private:
 		UPROPERTY()

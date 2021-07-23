@@ -1,11 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TurretBox.h"
 #include "TankPawn.h"
+#include <Components/SpotLightComponent.h>
 #include "Kismet/KismetMathLibrary.h"
 
-// Sets default values
+
 ATurretBox::ATurretBox(){
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -19,6 +17,9 @@ ATurretBox::ATurretBox(){
     Mesh->SetCollisionProfileName(FName("OverlapAll"));
     Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
     Mesh->SetGenerateOverlapEvents(true);
+
+	Light = CreateDefaultSubobject<USpotLightComponent>(TEXT("Light"));
+    Light->SetupAttachment(RootComponent);
 }
 
 void ATurretBox::BeginPlay(){
@@ -27,6 +28,7 @@ void ATurretBox::BeginPlay(){
 	ConstLocation = GetActorLocation();
 	ConstRotation = GetActorRotation();
 }
+
 void ATurretBox::Tick(const float DeltaTime){
 	Super::Tick(DeltaTime);
 

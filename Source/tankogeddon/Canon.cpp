@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "Canon.h"
 #include "Components/ArrowComponent.h"
 #include "Components/SceneComponent.h"
@@ -10,9 +8,11 @@
 #include "ProjectilePoolManagerSubSystem.h"
 #include "IDamakeTaker.h"
 #include "IScoreCounter.h"
+#include "IEmeny.h"
 #include <Particles/ParticleSystemComponent.h>
 #include <Components/AudioComponent.h>
 #include <Camera/CameraShake.h>
+#include "GameFramework/ForceFeedbackEffect.h"
 
 
 ACanon::ACanon(){
@@ -99,10 +99,6 @@ bool ACanon::IsReadyToFire() const {
 	return bIsReadyToFire;
 }
 
-void ACanon::OnEmenyElminated(){
-	ElminatedAudioEffect->Play();
-}
-
 void ACanon::Fire(){
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Fire: ammunition %d, ammo %d"), CurrentAmmunitionCount, CurrentAmmoCount));
 
@@ -134,8 +130,6 @@ void ACanon::Fire(){
 			ProjectileData.Rotation = ProjectileSpawnPoint->GetComponentRotation();
 			ProjectileData.Instigator = GetInstigator();
 			ProjectileData.CanonDamage = FireDamage;
-
-			Projectile->OnElminated.AddUObject(this, &ACanon::OnEmenyElminated);
 
 			Projectile->SetMoveRange(FireRange);
 			Projectile->Start(ProjectileData);
@@ -171,11 +165,10 @@ void ACanon::Fire(){
 
 				if(bIsDestroyed){
 					IIScoreCounter* ScoredActor = Cast<IIScoreCounter>(GetInstigator());
+					IIEmeny* EmenyActor = Cast<IIEmeny>(HitResult.Actor);
 
-					if(ScoredActor)
-						ScoredActor->IncrementScore(1);
-
-					OnEmenyElminated();
+					if(ScoredActor && EmenyActor)
+						ScoredActor->IncrementScore(EmenyActor->GetScoreValue());
 				}
 			}
 		} 

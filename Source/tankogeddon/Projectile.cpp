@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Projectile.h"
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
@@ -41,7 +38,7 @@ void AProjectile::EndPlay(EEndPlayReason::Type Reason){
 }
 
 void AProjectile::Start(FProjectilePreStartData StartData){
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, TEXT("Projectile: start"));
+	UE_LOG(LogTemp, Display, TEXT("Projectile %s is start"), *GetName());
 
 	bIsUsing = true;
 	Mesh->SetVisibility(true);
@@ -58,7 +55,7 @@ void AProjectile::Start(FProjectilePreStartData StartData){
 }
 
 void AProjectile::End(){
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, TEXT("Projectile: end"));
+	UE_LOG(LogTemp, Display, TEXT("Projectile %s is end"), *GetName());
 
 	bIsUsing = false;
 	Mesh->SetVisibility(false);
@@ -85,8 +82,6 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
     
 	if (OtherActor != GetInstigator() && !OtherActor->GetClass()->IsChildOf(StaticClass())){
         bool bIsDestroyed = false;
-        UE_LOG(LogTemp, Display, TEXT("Projectile %s, other actor %s, instigator %s"), *GetName(), *OtherActor->GetName(), *GetInstigator()->GetName());
-
 
         IIDamakeTaker* DamagedActor = Cast<IIDamakeTaker>(OtherActor);
         if (DamagedActor){
@@ -96,23 +91,25 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
             DamageData.DamageMaker = this;
 
             bIsDestroyed = DamagedActor->CauseDamage(DamageData);
+
+            if (bIsDestroyed && GetInstigator()){
+                IIScoreCounter* ScoredActor = Cast<IIScoreCounter>(GetInstigator());
+                IIEmeny* EmenyActor = Cast<IIEmeny>(OtherActor);
+
+                if(ScoredActor && EmenyActor)
+                    ScoredActor->IncrementScore(EmenyActor->GetScoreValue());
+            }
         }
-
-        if (bIsDestroyed && GetInstigator()){
-            IIScoreCounter* ScoredActor = Cast<IIScoreCounter>(GetInstigator());
-            IIEmeny* EmenyActor = Cast<IIEmeny>(OtherActor);
-
-            if(ScoredActor && EmenyActor)
-                ScoredActor->IncrementScore(EmenyActor->GetScoreValue());
-
-            if (OnElminated.IsBound())
-                OnElminated.Broadcast();
-        }
-
-        End();
+        else
+            OtherActor->Destroy();
     }
+
+    End();
 }
 
 bool AProjectile::IsUsing() const{
+    UE_LOG(LogTemp, Display, TEXT("Projectile %s is %s"), *GetName(), (bIsUsing ? TEXT("true") : TEXT("false")));
+
+
 	return bIsUsing;
 }

@@ -6,9 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "TankPlayerController.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class TANKOGEDDON_API ATankPlayerController : public APlayerController{
 	GENERATED_BODY()

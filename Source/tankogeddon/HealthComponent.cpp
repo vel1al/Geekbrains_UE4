@@ -2,12 +2,10 @@
 #include "IScoreCounter.h"
 
 
-// Sets default values for this component's properties
 UHealthComponent::UHealthComponent(){
 	PrimaryComponentTick.bCanEverTick = false;
 	CurrentHealth = MaxHealth;
 }
-
 
 bool UHealthComponent::TakeDamage(FDamageData DamageData){
     float TakenDamageValue = DamageData.DamageValue;

@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -13,7 +11,6 @@ class TANKOGEDDON_API UHealthComponent : public UActorComponent{
 		GENERATED_BODY()
 
 	public:	
-		// Sets default values for this component's properties
 		UHealthComponent();
 
 		DECLARE_EVENT(UHealthComponent, FOnDie)
@@ -34,7 +31,6 @@ class TANKOGEDDON_API UHealthComponent : public UActorComponent{
 		bool TakeDamage(FDamageData DamageData);
 
 		float GetHealth() const;
-
 		float GetHealthState() const;
 
 		void AddHealth(float AddiditionalHealthValue);

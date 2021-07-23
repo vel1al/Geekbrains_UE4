@@ -1,20 +1,22 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TowerBody.h"
 #include "TowerTurret.h"
 #include "Components/StaticMeshComponent.h"
 #include <Components/BoxComponent.h>
 #include "Components/ArrowComponent.h"
+#include <Components/AudioComponent.h>
 #include "HealthComponent.h"
+#include <DrawDebugHelpers.h>
 #include "Kismet/KismetMathLibrary.h"
-
+#include "Kismet/GameplayStatics.h"
+#include <Particles/ParticleSystemComponent.h>
 
 ATowerBody::ATowerBody(){
 	PrimaryActorTick.bCanEverTick = true;
 
+	USceneComponent* sceeneCpm = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+    RootComponent = sceeneCpm;
+
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Turret body"));
-    RootComponent = BodyMesh;
 
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
     HealthComponent->OnDie.AddUObject(this, &ATowerBody::Die);
@@ -33,6 +35,11 @@ bool ATowerBody::CauseDamage(FDamageData DamageData){
 
 void ATowerBody::Die(){
 	GEngine->AddOnScreenDebugMessage(10, 5.f, FColor::Red, TEXT("Tower: was destroyed"));
+
+	bIsDestroyed = true;
+
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyedEffect, GetActorTransform());
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), DestroyedAudioEffect, GetActorLocation());
 
 	InvalidateTurret();
 	Destroy();
@@ -84,12 +91,14 @@ void ATowerBody::Tick(const float DeltaTime){
 
 
 	if(CheckRange())
-		RotateTurretYAxis();
+		if(IsPlayerInView()){
+			RotateTurretYAxis();
 
-	AngleToPlayer = GetAngleToPlayer();
+			AngleToPlayer = GetAngleToPlayer();
 
-    if(AngleToPlayer < Accurency)
-        Fire();
+			if(AngleToPlayer < Accurency)
+				Fire();
+		}
 }
 
 void ATowerBody::RotateTurretYAxis(){
@@ -115,11 +124,38 @@ void ATowerBody::Fire(){
 }
 
 int ATowerBody::GetScoreValue() const{
+	if(IsDestroyed())
+		return 0;
+
 	return ScoreValue;
 }
 
 FVector ATowerBody::GetTurretDirection() const {
 	return Turret->GetTurretMeshDirection();
+}
+
+bool ATowerBody::IsPlayerInView(){
+    APawn* PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
+    if (PlayerTank){
+        FCollisionQueryParams Params(FName(TEXT("VeiewCheck")), true, this);
+        FHitResult HitResult;
+
+        Params.AddIgnoredActor(this);
+		Params.AddIgnoredActor(Turret);
+        Params.bReturnPhysicalMaterial = false;
+
+		if (GetWorld()->LineTraceSingleByChannel(HitResult, Turret->GetActorLocation(), PlayerTank->GetActorLocation(), ECC_Visibility, Params))
+            if (HitResult.Actor.IsValid()){
+				DrawDebugLine(GetWorld(), Turret->GetActorLocation(), HitResult.Location, FColor::Red, false, 5.f, 0, 5);
+               	return HitResult.Actor.Get() == PlayerTank;
+			}
+		
+		DrawDebugLine(GetWorld(), Turret->GetActorLocation(), HitResult.Location, FColor::Green, false, 5.f, 0, 5);
+
+		return false;
+	}
+
+	return false;
 }
 
 float ATowerBody::GetAngleToPlayer() {
@@ -132,4 +168,8 @@ float ATowerBody::GetAngleToPlayer() {
     DirectionToPlayer.Normalize();
 
 	return FMath::RadiansToDegrees(acosf(FVector::DotProduct(TargetingDirection, DirectionToPlayer)));
+}
+
+bool ATowerBody::IsDestroyed() const {
+    return bIsDestroyed;
 }

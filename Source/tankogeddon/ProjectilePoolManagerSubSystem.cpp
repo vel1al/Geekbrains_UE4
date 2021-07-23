@@ -1,12 +1,7 @@
 #include "ProjectilePoolManagerSubSystem.h"
 #include "ProjectilePoolManager.h"
 #include "Projectile.h"
-#include "tankogeddonGameModeBase.h"
 
-
-void UProjectilePoolManagerSubSystem::Deinitialize(){
-    ProjectilePoolManagers.Empty();
-}
 
 UProjectilePoolManager* UProjectilePoolManagerSubSystem::GetProjectilePoolManager(TSubclassOf<class AProjectile> ProjectileClass) {
     UProjectilePoolManager* ReturningValue = nullptr;

@@ -1,11 +1,10 @@
-
 #include "TowerTurret.h"
 #include "Components/ArrowComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Canon.h"
 
-// Sets default values
+
 ATowerTurret::ATowerTurret(){
 	PrimaryActorTick.bCanEverTick = false;
 

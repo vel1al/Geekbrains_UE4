@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "ProjectilePoolManager.h"
 #include <algorithm>
 #include "Projectile.h"
@@ -21,21 +19,25 @@ void UProjectilePoolManager::BeginPlay(){
     CreateProjectile();
 }
 
-// void UProjectilePoolManager::BeginDestroy(){
-//     Super::BeginDestroy();
+void UProjectilePoolManager::BeginDestroy(){
+    Super::BeginDestroy();
 
 
-//     AllocatedObjects.Empty();
-// }
+    AllocatedObjects.Empty();
+}
 
 AProjectile* UProjectilePoolManager::FindNextAvaibleObject(){
     AProjectile* ReturningValue = nullptr;
 
     if(AllocatedObjects.Num() > 1)
-        for (int element = 0; element < AllocatedObjects.Num(); ++element)
-            if(AllocatedObjects[element])
+        for (int element = 0; element < AllocatedObjects.Num(); ++element){
+            if(AllocatedObjects[element]){
                 if(!(AllocatedObjects[element]->IsUsing()))
                     ReturningValue = AllocatedObjects[element];
+            }
+            else
+                AllocatedObjects.RemoveAt(element);
+        }
     
 
     if(!(ReturningValue))

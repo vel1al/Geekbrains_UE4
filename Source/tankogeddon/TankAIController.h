@@ -26,4 +26,6 @@ class TANKOGEDDON_API ATankAIController : public AAIController{
 
         UPROPERTY()
 	    class ATankPawn* ControllingTank;
+
+        void Initialize();
 };
