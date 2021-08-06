@@ -18,5 +18,5 @@ class TANKOGEDDON_API IIScoreCounter{
 	GENERATED_BODY()
 
 	public:
-		virtual void IncrementScore(const int value) = 0;
+		virtual void IncrementScore(class AActor* SecondActor) = 0;
 };

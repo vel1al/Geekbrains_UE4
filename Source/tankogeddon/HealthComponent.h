@@ -28,7 +28,7 @@ class TANKOGEDDON_API UHealthComponent : public UActorComponent{
 		FOnDie OnDie;
 		FOnHealthChanged OnTookDamage;
 
-		bool TakeDamage(FDamageData DamageData);
+		bool CauseDamage(FDamageData DamageData);
 
 		float GetHealth() const;
 		float GetHealthState() const;

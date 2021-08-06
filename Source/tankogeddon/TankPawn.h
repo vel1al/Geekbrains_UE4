@@ -2,40 +2,27 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "IBody.h"
-#include "IDamakeTaker.h"
-#include "IScoreCounter.h"
+#include "PlayerVechicle.h"
 #include "TankPawn.generated.h"
 
 
 UCLASS()
-class TANKOGEDDON_API ATankPawn : public APawn, public IIBody, public IIDamakeTaker, public IIScoreCounter{
+class TANKOGEDDON_API ATankPawn : public APlayerVechicle{
 		GENERATED_BODY()
 
 	public:
-		
 		ATankPawn();
-		
-		UFUNCTION(BlueprintCallable, Category = "Tank|Health")
-		bool CauseDamage(FDamageData DamageData) override;
-		UFUNCTION(BlueprintCallable, Category = "Tank|Health")
-		void Die() override;
-		UFUNCTION(BlueprintCallable, Category = "Tank|Health")
-		bool IsDestroyed() const override;
-
+	
 		virtual void Tick(const float DeltaTime) override;
-		
-		UFUNCTION(BlueprintCallable, Category = "Tank|Score")
-		void IncrementScore(const int value) override;
 
 		UFUNCTION(BlueprintCallable, Category = "Turret|Movement")
 		void RotateTurretToStart();
 		UFUNCTION(BlueprintCallable, Category = "Turret|Movement")
-		void SetRotateTurretTorqueZAxis(const float InAxisValue) override;
+		void SetRotateTurretTorqueZAxis(const float InAxisValue);
 		UFUNCTION(BlueprintCallable, Category = "Tank|Movement")
-		void SetRotateTorqueZAxis(const float InAxisValue) override;
+		void SetRotateTorqueZAxis(const float InAxisValue);
 		UFUNCTION(BlueprintCallable, Category = "TankMovement")
-		void SetMoveTorqueXAxis(const float InAxisValue) override;
+		void SetMoveTorqueXAxis(const float InAxisValue);
 
 		UFUNCTION(BlueprintCallable, Category = "Tank|Movement")
 		float GetMoveTorqueXAxis() const;
@@ -43,18 +30,18 @@ class TANKOGEDDON_API ATankPawn : public APawn, public IIBody, public IIDamakeTa
 		float GetMoveSpeedXAxis() const;
 
 		UFUNCTION(BlueprintCallable, Category = "TankFire")
-		void FireMain() override;
+		void FireMain();
 		UFUNCTION(BlueprintCallable, Category = "TankFire")
-		void FireSecond() override;
+		void FireSecond();
 
 		UFUNCTION(BlueprintCallable, Category = "Turret")
 		void SetUpTurret(TSubclassOf<ATankTurret> NewTurretClass);
 		UFUNCTION(BlueprintCallable, Category = "Turret")
-		void SetUpCannon(TSubclassOf<class ACanon> NewCannonClass);
+		void SetUpCannon(TSubclassOf<class ACanonBase> NewCannonClass);
 		UFUNCTION(BlueprintCallable, Category = "Turret")
 		void ChangeTurret();
 		UFUNCTION(BlueprintCallable, Category = "Turret")
-		FVector GetTurretDirection() const override;
+		FVector GetTurretDirection() const;
 		UFUNCTION(BlueprintCallable, Category = "Turret")
 		FVector GetLookFromPosition() const;
 
@@ -74,11 +61,6 @@ class TANKOGEDDON_API ATankPawn : public APawn, public IIBody, public IIDamakeTa
 		class UArrowComponent* TurretSetupPoint;
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
     	class UAudioComponent* PlayerHitAudioEffect;
-
-		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Effects")
-    	class USoundBase* DestroyedAudioEffect;
-		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Effects")
-		class UParticleSystem* DestroyedEffect;
 		
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 		TSubclassOf<class ATankTurret> DefaultTurretClass;
@@ -105,7 +87,6 @@ class TANKOGEDDON_API ATankPawn : public APawn, public IIBody, public IIDamakeTa
 		int TurretSlotsCount = 2;
 
 	protected:
-		// Called when the game starts or when spawned
 		virtual void BeginPlay() override;
 		virtual void EndPlay(EEndPlayReason::Type Reason) override;
 		virtual void Destroyed() override;
@@ -115,7 +96,6 @@ class TANKOGEDDON_API ATankPawn : public APawn, public IIBody, public IIDamakeTa
 		ATankTurret* TankTurret;
 		UPROPERTY()
 		TArray<ATankTurret*> TurretSlots;
-
 
 		ATankTurret* GetCurrentActiveTurret();
 
@@ -137,7 +117,4 @@ class TANKOGEDDON_API ATankPawn : public APawn, public IIBody, public IIDamakeTa
 		void RotateTurretZAxis(const float DeltaTime);
 
 		void InvalidateTurret(int RequiredSlot);
-
-		UFUNCTION()
-		void DamageTook(float DamageValue); 
 };

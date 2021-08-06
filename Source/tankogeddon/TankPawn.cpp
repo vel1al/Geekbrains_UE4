@@ -1,23 +1,24 @@
 #include "TankPawn.h"
+
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/ArrowComponent.h"
 #include <Components/AudioComponent.h>
 #include <Components/BoxComponent.h>
-#include "HealthComponent.h"
-#include "ScoreComponent.h"
+#include <Particles/ParticleSystemComponent.h>
+
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
+
 #include "DrawDebugHelpers.h"
+
 #include "TankTurret.h"
 #include "Gamestructs.h"
-#include <Particles/ParticleSystemComponent.h>
+
 
 
 ATankPawn::ATankPawn(){
-	PrimaryActorTick.bCanEverTick = true;
-
 	USceneComponent* sceeneCpm = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
     RootComponent = sceeneCpm;
 
@@ -34,12 +35,6 @@ ATankPawn::ATankPawn(){
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm);
 
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
-    HealthComponent->OnDie.AddUObject(this, &ATankPawn::Die);
-    HealthComponent->OnTookDamage.AddUObject(this, &ATankPawn::DamageTook);
-
-	ScoreComponent = CreateDefaultSubobject<UScoreComponent>(TEXT("Score component"));
-
 	HitBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HitBox"));
 	HitBox->SetupAttachment(RootComponent);
 
@@ -50,27 +45,6 @@ ATankPawn::ATankPawn(){
 	PlayerHitAudioEffect->SetupAttachment(RootComponent);
 }
 
-bool ATankPawn::CauseDamage(FDamageData DamageData){
-	return HealthComponent->TakeDamage(DamageData);
-}
-
-void ATankPawn::Die(){
-	bIsDestroyed = true;
-
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyedEffect, GetActorTransform());
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), DestroyedAudioEffect, GetActorLocation());
-
-	Destroy();
-}
-
-void ATankPawn::DamageTook(float DamageValue){
-	PlayerHitAudioEffect->Play();
-}
-
-void ATankPawn::IncrementScore(const int value){
-	ScoreComponent->IncrementScore(value);
-}
-
 void ATankPawn::InvalidateTurret(int RequiredSlot){
 	if(TurretSlots.IsValidIndex(RequiredSlot))
 		if (TurretSlots[RequiredSlot]){
@@ -79,7 +53,7 @@ void ATankPawn::InvalidateTurret(int RequiredSlot){
 		}
 }
 
-void ATankPawn::SetUpCannon(TSubclassOf<ACanon> NewCannonClass){
+void ATankPawn::SetUpCannon(TSubclassOf<ACanonBase> NewCannonClass){
 	if(TurretSlots[CurrentTurretSlot])
 		TurretSlots[CurrentTurretSlot]->SetUpCannon(NewCannonClass);
 }
@@ -260,8 +234,4 @@ void ATankPawn::FireMain(){
 void ATankPawn::FireSecond(){
 	if(TurretSlots[CurrentTurretSlot])
 		TurretSlots[CurrentTurretSlot]->FireSecond();
-}
-
-bool ATankPawn::IsDestroyed() const {
-    return bIsDestroyed;
 }

@@ -1,15 +1,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "IDamakeTaker.h"
-#include "IEmeny.h"
-#include "GameStructs.h"
+#include "DamageTaker.h"
 #include "TankFactory.generated.h"
 
 
 UCLASS()
-class TANKOGEDDON_API ATankFactory : public AActor, public IIDamakeTaker, public IIEmeny {
+class TANKOGEDDON_API ATankFactory : public ADamageTaker {
 		GENERATED_BODY()
 		
 	public:	
@@ -23,12 +20,6 @@ class TANKOGEDDON_API ATankFactory : public AActor, public IIDamakeTaker, public
 		class UArrowComponent* TankSpawnPoint;
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		class UBoxComponent* HitBox;
-		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class UHealthComponent* HealthComponent;
-		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class UParticleSystemComponent* ColapseEffect;
-		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-    	class UAudioComponent* ColapseAudioEffect;
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 		class UParticleSystemComponent* OnNewTankSpawnEffect;
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
@@ -49,31 +40,16 @@ class TANKOGEDDON_API ATankFactory : public AActor, public IIDamakeTaker, public
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TankFactory|LevelChange")
 		AActor* LevelChanger;
 
-
-		UFUNCTION(BlueprintCallable, Category = "Damage")
-		bool CauseDamage(FDamageData DamageData) override;
-		UFUNCTION(BlueprintCallable, Category = "Damage")
-		bool IsDestroyed() const override;
-
-		UFUNCTION(BlueprintCallable, Category = "Score")
-		int GetScoreValue() const override;
-		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "TankFactory|Score")
-		int ElminatedScoreValue = 5;
-
 	protected:
 		virtual void BeginPlay() override;
 		virtual void Destroyed() override;
+
+		virtual void OnDieEvent() override;
 
 	private:
 		void SpawnNewTank();
 
 		void ChangeMeshState(const bool state);
 
-		UFUNCTION()
-		void Die();
-
-
 		FTimerHandle TankSpawningDelayTimerHandle;
-
-		bool bIsColapsed;
 };

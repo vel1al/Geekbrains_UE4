@@ -38,10 +38,6 @@ AProjectile* UProjectilePoolManager::FindNextAvaibleObject(){
             else
                 AllocatedObjects.RemoveAt(element);
         }
-    
-
-    if(!(ReturningValue))
-        ReturningValue = CreateProjectile();
 
     return ReturningValue;
 }
@@ -49,11 +45,8 @@ AProjectile* UProjectilePoolManager::FindNextAvaibleObject(){
 AProjectile* UProjectilePoolManager::GetProjectile(){
     AProjectile* ReturningValue;
 
-    if(!(FirstAvaibleObject)){
-        ReturningValue = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, FVector(0.f), FRotator(0.f));
-        
-        AllocatedObjects.Add(ReturningValue);
-    } 
+    if(!(FirstAvaibleObject))
+        ReturningValue = CreateProjectile();
     else{
         ReturningValue = FirstAvaibleObject;
 

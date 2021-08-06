@@ -42,3 +42,23 @@ struct FProjectilePreStartData{
     UPROPERTY()
     float CanonDamage;
 };
+
+USTRUCT(BlueprintType)
+struct FPhysicsProjectilePreStartData{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    FVector Location;
+
+    UPROPERTY()
+    FVector SupportPoint;
+
+    UPROPERTY()
+    FVector DestinitionPoint;
+
+    UPROPERTY()
+    APawn* Instigator;
+
+    UPROPERTY()
+    float CanonDamage;
+};

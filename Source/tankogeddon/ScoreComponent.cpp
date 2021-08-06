@@ -1,16 +1,17 @@
 #include "ScoreComponent.h"
-
+#include "IEmeny.h"
 
 UScoreComponent::UScoreComponent(){
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UScoreComponent::IncrementScore(const int value){
-	if(value > 0){
-		CurrentScore += value;
+void UScoreComponent::IncrementScore(AActor* SecondActor){
+	if (SecondActor){
+        IIEmeny* EmenyActor = Cast<IIEmeny>(SecondActor);
 
-		GEngine->AddOnScreenDebugMessage(10, 1.f, FColor::Green, FString::Printf(TEXT("Score: added %d point, now %d"), value, CurrentScore));
-	}
+        if(EmenyActor)
+            CurrentScore += EmenyActor->GetScoreValue();
+    }
 }
 
 int UScoreComponent::GetScore() const{

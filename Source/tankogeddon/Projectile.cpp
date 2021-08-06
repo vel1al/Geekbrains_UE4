@@ -1,9 +1,12 @@
 #include "Projectile.h"
+
 #include "Components/StaticMeshComponent.h"
+
+#include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
-#include "IScoreCounter.h"
-#include "IEmeny.h"
-#include "IDamakeTaker.h"
+
+#include "PlayerVechicle.h"
+#include "DamageTaker.h"
 
 
 AProjectile::AProjectile(){
@@ -23,34 +26,28 @@ void AProjectile::SetMoveRange(const float value){
     MoveRange = value;
 }
 
-void AProjectile::BeginPlay(){
-	Super::BeginPlay();
-
-	
-	World = GetWorld();
-}
-
 void AProjectile::EndPlay(EEndPlayReason::Type Reason){
 	MovementTimerHandle.Invalidate();
-    World = nullptr;
 
 	Super::EndPlay(Reason);
 }
 
-void AProjectile::Start(FProjectilePreStartData StartData){
+void AProjectile::SetPrestartData(FProjectilePreStartData PrestartData){
+	SetActorRotation(PrestartData.Rotation);
+    SetInstigator(PrestartData.Instigator);
+
+    ShotDamage = ProjectileDamage + PrestartData.CanonDamage;
+
+    SetActorLocation(PrestartData.Location);
+}
+
+void AProjectile::Start(){
 	UE_LOG(LogTemp, Display, TEXT("Projectile %s is start"), *GetName());
 
 	bIsUsing = true;
-	Mesh->SetVisibility(true);
-
-	SetActorRotation(StartData.Rotation);
-
-    SetInstigator(StartData.Instigator);
-
-    ShotDamage = ProjectileDamage + StartData.CanonDamage;
-	PassedWay = 0.f;
-
-    SetActorLocation(StartData.Location);
+    Mesh->SetVisibility(true);
+    PassedWay = 0.f;
+    
     GetWorld()->GetTimerManager().SetTimer(MovementTimerHandle, this, &AProjectile::Move, MoveRate, true, MoveRate);
 }
 
@@ -68,48 +65,110 @@ void AProjectile::End(){
 void AProjectile::Move(){
 	FVector MoveOffset = GetActorForwardVector() * MoveSpeed * MoveRate;
     FVector TargetPosition = GetActorLocation() + MoveOffset;
-
-	PassedWay += MoveOffset.Size2D();
-
+    
+    PassedWay += MoveOffset.Size2D();
 	if(PassedWay >= MoveRange)
 		End();
 	else	
     	SetActorLocation(TargetPosition);
 }
 
+void AProjectile::DoExplodeHit() {
+    FVector CurrentLocation = GetActorLocation();
+
+    TArray<FHitResult> OnExplodeHits;
+    FCollisionShape ColisionShape = FCollisionShape::MakeSphere(ProjectileExplosionRadius);
+
+    FCollisionQueryParams Settings = FCollisionQueryParams::DefaultQueryParam;
+    Settings.AddIgnoredActor(this);
+    Settings.bTraceComplex = true;
+    Settings.TraceTag = "ExplodeTrace";
+
+
+    bool ExplodeSweepResult = GetWorld()->SweepMultiByChannel(OnExplodeHits,
+        CurrentLocation,
+        CurrentLocation + FVector(0.1f),
+        FQuat::Identity,
+        ECollisionChannel::ECC_Visibility,
+        ColisionShape,
+        Settings);
+
+    GetWorld()->DebugDrawTraceTag = "ExplodeTrace";
+
+    if (ExplodeSweepResult) 
+        for (FHitResult CurrentHit : OnExplodeHits) {
+            AActor* CurrentHitActor = CurrentHit.GetActor();
+
+            if (!CurrentHitActor)
+                continue;
+
+            AplyDamage(CurrentHitActor);
+            AplyPushForce(CurrentHitActor);
+        }
+    
+    OnExplodeEffects();
+}
+
+void AProjectile::DoFlatHit(AActor* OtherActor) {
+    bool bIsDestroyed = false;
+
+    AplyDamage(OtherActor);
+    AplyPushForce(OtherActor);
+}
+
+void AProjectile::OnExplodeEffects() const {
+    UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, GetActorTransform());
+    UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionAudioEffect, GetActorLocation());
+}
+
+void AProjectile::AplyDamage(AActor* OtherActor){
+    bool bIsDestroyed;
+    
+    ADamageTaker* DamagedActor = Cast<ADamageTaker>(OtherActor);
+    if (DamagedActor) {
+        FDamageData DamageData;
+        DamageData.DamageValue = ShotDamage;
+        DamageData.Instigator = GetInstigator();
+        DamageData.DamageMaker = this;
+
+        bIsDestroyed = DamagedActor->CauseDamage(DamageData);
+
+        if (bIsDestroyed && GetInstigator()) {
+            APlayerVechicle* ScoredActor = Cast<APlayerVechicle>(GetInstigator());
+            if (ScoredActor)
+                ScoredActor->IncrementScore(OtherActor);
+        }
+    }
+}
+
+void AProjectile::AplyPushForce(AActor* OtherActor){
+    UPrimitiveComponent* TouchedMesh = Cast<UPrimitiveComponent>(OtherActor->GetRootComponent());
+    if (TouchedMesh) {
+        if (TouchedMesh->IsSimulatingPhysics()) {
+            FVector ForceVector = OtherActor->GetActorLocation() - GetActorLocation();
+            ForceVector.Normalize();
+
+            TouchedMesh->AddImpulse(ForceVector * PushForce, NAME_None, true);
+        }
+    }
+}
+
+
 void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult){
-    
-	if (OtherActor != GetInstigator() && !OtherActor->GetClass()->IsChildOf(StaticClass())){
-        bool bIsDestroyed = false;
+    if (OtherActor == GetInstigator() || OtherActor->GetClass()->IsChildOf(StaticClass()))
+        return; 
 
-        IIDamakeTaker* DamagedActor = Cast<IIDamakeTaker>(OtherActor);
-        if (DamagedActor){
-            FDamageData DamageData;
-            DamageData.DamageValue = ShotDamage;
-            DamageData.Instigator = GetInstigator();
-            DamageData.DamageMaker = this;
+    if (bIsExploding)
+        DoExplodeHit();
+    else
+        DoFlatHit(OtherActor);
 
-            bIsDestroyed = DamagedActor->CauseDamage(DamageData);
-
-            if (bIsDestroyed && GetInstigator()){
-                IIScoreCounter* ScoredActor = Cast<IIScoreCounter>(GetInstigator());
-                IIEmeny* EmenyActor = Cast<IIEmeny>(OtherActor);
-
-                if(ScoredActor && EmenyActor)
-                    ScoredActor->IncrementScore(EmenyActor->GetScoreValue());
-            }
-        }
-        else
-            OtherActor->Destroy();
-    }
-
-    End();
+    End();    
 }
 
 bool AProjectile::IsUsing() const{
     UE_LOG(LogTemp, Display, TEXT("Projectile %s is %s"), *GetName(), (bIsUsing ? TEXT("true") : TEXT("false")));
-
 
 	return bIsUsing;
 }

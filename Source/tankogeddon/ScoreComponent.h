@@ -12,7 +12,7 @@ class TANKOGEDDON_API UScoreComponent : public UActorComponent{
 	public:	
 		UScoreComponent();
 
-		void IncrementScore(const int value);
+		void IncrementScore(class AActor* SecondActor);
 		
 		int GetScore() const;
 

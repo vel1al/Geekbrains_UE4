@@ -7,7 +7,7 @@ UHealthComponent::UHealthComponent(){
 	CurrentHealth = MaxHealth;
 }
 
-bool UHealthComponent::TakeDamage(FDamageData DamageData){
+bool UHealthComponent::CauseDamage(FDamageData DamageData){
     float TakenDamageValue = DamageData.DamageValue;
     bool bWasDestroyed = false;
 
