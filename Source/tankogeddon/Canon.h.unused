@@ -56,30 +56,31 @@ class TANKOGEDDON_API ACanon : public AActor{
 		int SecondShotsCount = 4;
 
 		UFUNCTION(BlueprintCallable, Category = "Fire")
-		void FireMain();
+		virtual void FireMain();
 		UFUNCTION(BlueprintCallable, Category = "Fire")
 		void FireSecond();
 		UFUNCTION(BlueprintPure, Category = "Fire")
-		bool IsReadyToFire() const;
+		virtual bool IsReadyToFire() const;
 
 		UFUNCTION(BlueprintCallable, Category = "Ammo")
-		void RestoreAmmo();
+		virtual void RestoreAmmo();
 		UFUNCTION(BlueprintCallable, Category = "Ammo")
-		void AddAmmo(const int AdditionalAmmoValue);
+		virtual void AddAmmo(const int AdditionalAmmoValue);
 
 	protected:
 		virtual void BeginPlay() override;
 		virtual void EndPlay(EEndPlayReason::Type Reason) override;
-
-	private:
-		void Reload();
-		void Cooldown();
+		
+		virtual void Reload();
+		virtual void Cooldown();
 
 		void Fire();
 
 		void SecondShot();
 		void MainShot();
 
+
+	private:
 		bool bIsReadyToFire = false;
 	
 		int CurrentSecondShot;

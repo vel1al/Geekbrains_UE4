@@ -3,7 +3,7 @@
 #include "Projectile.h"
 
 
-UProjectilePoolManager* UProjectilePoolManagerSubSystem::GetProjectilePoolManager(TSubclassOf<class AProjectile> ProjectileClass) {
+UProjectilePoolManager* UProjectilePoolManagerSubSystem::GetProjectilePoolManager(TSubclassOf<AProjectile> ProjectileClass) {
     UProjectilePoolManager* ReturningValue = nullptr;
     auto Predicate = [&](const UProjectilePoolManager* element){
         return element->GetProjectileClass() == ProjectileClass;
@@ -12,7 +12,7 @@ UProjectilePoolManager* UProjectilePoolManagerSubSystem::GetProjectilePoolManage
     if(!(ProjectileClass))
         return nullptr;
     
-    if(ProjectilePoolManagers.Num() > 1)
+    if(ProjectilePoolManagers.Num() > 0)
         ReturningValue = *ProjectilePoolManagers.FindByPredicate(Predicate);
 
     if(!(ReturningValue)){

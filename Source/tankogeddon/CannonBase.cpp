@@ -1,21 +1,25 @@
-#include "Canon.h"
+#include "CannonBase.h"
+
 #include "Components/ArrowComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "DrawDebugHelpers.h"
-#include "ProjectilePoolManager.h"
-#include "Projectile.h"
-#include "ProjectilePoolManagerSubSystem.h"
-#include "IDamakeTaker.h"
-#include "IScoreCounter.h"
-#include "IEmeny.h"
 #include <Particles/ParticleSystemComponent.h>
 #include <Components/AudioComponent.h>
 #include <Camera/CameraShake.h>
 #include "GameFramework/ForceFeedbackEffect.h"
 
+#include "DrawDebugHelpers.h"
 
-ACanon::ACanon(){
+#include "ProjectilePoolManager.h"
+#include "Projectile.h"
+#include "ProjectilePoolManagerSubSystem.h"
+
+#include "DamageTaker.h"
+#include "PlayerVechicle.h"
+#include "TankPlayerState.h"
+
+
+ACanonBase::ACanonBase(){
 	PrimaryActorTick.bCanEverTick = false;
 
 	USceneComponent* SceneComp = CreateDefaultSubobject<USceneComponent>("Root");
@@ -37,7 +41,7 @@ ACanon::ACanon(){
 	ElminatedAudioEffect->SetupAttachment(ProjectileSpawnPoint);
 }
 
-void ACanon::BeginPlay(){
+void ACanonBase::BeginPlay(){
 	Super::BeginPlay();
 	
 	CurrentAmmoCount = AmmoCount;
@@ -45,7 +49,7 @@ void ACanon::BeginPlay(){
 	bIsReadyToFire = true;
 }
 
-void ACanon::EndPlay(EEndPlayReason::Type Reason){
+void ACanonBase::EndPlay(EEndPlayReason::Type Reason){
 	ReloadTimerHandle.Invalidate();
 	CooldownTimerHandle.Invalidate();
 	SecondIntervalTimerHandle.Invalidate();
@@ -53,7 +57,7 @@ void ACanon::EndPlay(EEndPlayReason::Type Reason){
 	Super::EndPlay(Reason);
 }
 
-void ACanon::Reload(){
+void ACanonBase::Reload(){
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Fire: Reloaded"));
 
 	if(CurrentAmmunitionCount > AmmoCount)
@@ -69,20 +73,20 @@ void ACanon::Reload(){
 	CurrentAmmoCount = AmmoCount;
 }
 
-void ACanon::Cooldown(){
+void ACanonBase::Cooldown(){
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Fire: Cooldowned"));
 
 	bIsReadyToFire = true;
 }
 
-void ACanon::MainShot(){
+void ACanonBase::MainShot(){
 	bIsReadyToFire = false;
 	--CurrentAmmoCount;
 
 	Fire();
 }
 
-void ACanon::SecondShot(){
+void ACanonBase::SecondShot(){
 	GEngine->AddOnScreenDebugMessage(-1, 0.5, FColor::Green, TEXT("Fire: Second shot"));
 
 	--CurrentSecondShot;
@@ -90,16 +94,16 @@ void ACanon::SecondShot(){
 	if(CurrentSecondShot > 0){
 		Fire();
 
-		GetWorld()->GetTimerManager().SetTimer(SecondIntervalTimerHandle, this, &ACanon::SecondShot, SecondIntervalTime, false);
+		GetWorld()->GetTimerManager().SetTimer(SecondIntervalTimerHandle, this, &ACanonBase::SecondShot, SecondIntervalTime, false);
 	} else
 		return;
 }
 
-bool ACanon::IsReadyToFire() const {
+bool ACanonBase::IsReadyToFire() const {
 	return bIsReadyToFire;
 }
 
-void ACanon::Fire(){
+void ACanonBase::Fire(){
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Fire: ammunition %d, ammo %d"), CurrentAmmunitionCount, CurrentAmmoCount));
 
 	ShootEffect->ActivateSystem();
@@ -132,7 +136,9 @@ void ACanon::Fire(){
 			ProjectileData.CanonDamage = FireDamage;
 
 			Projectile->SetMoveRange(FireRange);
-			Projectile->Start(ProjectileData);
+			Projectile->SetPrestartData(ProjectileData);
+			
+			Projectile->Start();
 		}
 	}
 	else if (Type == ECannonType::FireRay){
@@ -150,7 +156,7 @@ void ACanon::Fire(){
 			DrawDebugLine(GetWorld(), StartPoint, HitResult.Location, FColor::Red, false, 5.f, 0, 5);
 			
 			if (HitResult.Actor.IsValid()){
-				IIDamakeTaker* DamagedActor = Cast<IIDamakeTaker>(HitResult.Actor);
+				ADamageTaker* DamagedActor = Cast<ADamageTaker>(HitResult.Actor);
 				bool bIsDestroyed = false;
 
 				if(DamagedActor){
@@ -161,15 +167,24 @@ void ACanon::Fire(){
 					DamageData.DamageMaker = this;
 
 					bIsDestroyed = DamagedActor->CauseDamage(DamageData);
+					
+					if (bIsDestroyed){
+						APlayerVechicle* ScoredActor = Cast<APlayerVechicle>(GetInstigator());
+						if(ScoredActor){
+							ATankPlayerState* PlayerState = Cast<ATankPlayerState>(ScoredActor->GetPlayerState());
+							if(PlayerState)
+								PlayerState->IncrementScore();
+						}
+						else{
+							APlayerVechicle* Player = Cast<APlayerVechicle>(HitResult.GetActor());
+							if(Player){
+								ATankPlayerState* PlayerState = Cast<ATankPlayerState>(Player->GetPlayerState());
+								if(PlayerState)
+									PlayerState->PlayerDie();
+							}
+						}
+					}
 				}	
-
-				if(bIsDestroyed){
-					IIScoreCounter* ScoredActor = Cast<IIScoreCounter>(GetInstigator());
-					IIEmeny* EmenyActor = Cast<IIEmeny>(HitResult.Actor);
-
-					if(ScoredActor && EmenyActor)
-						ScoredActor->IncrementScore(EmenyActor->GetScoreValue());
-				}
 			}
 		} 
 		
@@ -178,49 +193,49 @@ void ACanon::Fire(){
 	}
 }
 
-void ACanon::FireMain(){
+void ACanonBase::FireMain(){
 	if(!bIsReadyToFire){
 		return;
 	}
 	else if(CurrentAmmoCount == 0){
 		bIsReadyToFire = false;
-		GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACanon::Reload, FireReloadTime, false);
+		GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACanonBase::Reload, FireReloadTime, false);
 	}
 	else{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Fire: Single shot"));
 
 		MainShot();
 
-		GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &ACanon::Cooldown, MainFireCooldownTime, false);
+		GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &ACanonBase::Cooldown, MainFireCooldownTime, false);
 	}
 }
 
-void ACanon::FireSecond(){
+void ACanonBase::FireSecond(){
 	if(!bIsReadyToFire)
 		return;
 	else if(CurrentAmmoCount == 0){
 		bIsReadyToFire = false;
-		GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACanon::Reload, FireReloadTime, false);
+		GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACanonBase::Reload, FireReloadTime, false);
 	}
 	else{
 		bIsReadyToFire = false;
 		--CurrentAmmoCount;
 
 		CurrentSecondShot = SecondShotsCount;
-		GetWorld()->GetTimerManager().SetTimer(SecondIntervalTimerHandle, this, &ACanon::SecondShot, SecondIntervalTime, false);
+		GetWorld()->GetTimerManager().SetTimer(SecondIntervalTimerHandle, this, &ACanonBase::SecondShot, SecondIntervalTime, false);
 		
-		GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &ACanon::Cooldown, SecondFireCooldownTime, false);
+		GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &ACanonBase::Cooldown, SecondFireCooldownTime, false);
 	}
 }
 
-void ACanon::AddAmmo(const int AdditionalAmmoValue){
+void ACanonBase::AddAmmo(const int AdditionalAmmoValue){
 	if(AdditionalAmmoValue > AmmunitionCount)
 		CurrentAmmunitionCount = AmmunitionCount;
 	else
 		CurrentAmmunitionCount += AdditionalAmmoValue;
 }
 
-void ACanon::RestoreAmmo(){
+void ACanonBase::RestoreAmmo(){
 	CurrentAmmunitionCount = AmmunitionCount;
 	CurrentAmmoCount = AmmoCount;
 }

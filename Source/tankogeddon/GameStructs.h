@@ -12,6 +12,15 @@ enum class ECannonType : uint8{
     FireRay = 1 UMETA(DisplayName = "Raycast")
 };
 
+UENUM()
+enum class EWidget : uint8 {
+	None,
+    MainMenu,
+    Pause,
+    HUD,
+	GameOver
+};
+
 USTRUCT(BlueprintType)
 struct FDamageData{
     GENERATED_BODY()
@@ -35,6 +44,26 @@ struct FProjectilePreStartData{
 
     UPROPERTY()
     FRotator Rotation;
+
+    UPROPERTY()
+    APawn* Instigator;
+
+    UPROPERTY()
+    float CanonDamage;
+};
+
+USTRUCT(BlueprintType)
+struct FPhysicsProjectilePreStartData{
+    GENERATED_BODY()
+
+    UPROPERTY()
+    FVector Location;
+
+    UPROPERTY()
+    FVector SupportPoint;
+
+    UPROPERTY()
+    FVector DestinitionPoint;
 
     UPROPERTY()
     APawn* Instigator;

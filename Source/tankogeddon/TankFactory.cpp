@@ -1,5 +1,7 @@
 #include "TankFactory.h"
 #include "ILevelChanger.h"
+#include "TankPawn.h"
+
 #include <Components/StaticMeshComponent.h>
 #include <Components/ArrowComponent.h>
 #include <Components/BoxComponent.h>
@@ -7,13 +9,11 @@
 #include <Camera/CameraShake.h>
 #include <Particles/ParticleSystemComponent.h>
 #include "GameFramework/ForceFeedbackEffect.h"
-#include "HealthComponent.h"
-#include "TankPawn.h"
+
+#include "Kismet/GameplayStatics.h"
 
 
 ATankFactory::ATankFactory(){
-	PrimaryActorTick.bCanEverTick = false;
-
 	USceneComponent* sceeneCpm = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
     RootComponent = sceeneCpm;
 
@@ -28,46 +28,25 @@ ATankFactory::ATankFactory(){
 
     HitBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HitBox"));
     HitBox->SetupAttachment(RootComponent);
-
-    HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
-    HealthComponent->OnDie.AddUObject(this, &ATankFactory::Die);
-
-    ColapseEffect = CreateDefaultSubobject<UParticleSystemComponent>("ColapseEffect");
-	ColapseEffect->SetupAttachment(ColapsedMesh);
-
-    ColapseAudioEffect = CreateDefaultSubobject<UAudioComponent>("ColapseAudioEffect");
-	ColapseAudioEffect->SetupAttachment(ColapsedMesh);
     
     OnNewTankSpawnEffect = CreateDefaultSubobject<UParticleSystemComponent>("OnNewTankEffect");
-	OnNewTankEffect->SetupAttachment(DefaultdMesh);
+	OnNewTankSpawnEffect->SetupAttachment(DefaultMesh);
 
-    OnNewTankAudioEffect = CreateDefaultSubobject<UAudioComponent>("OnNewTankAudioEffect");
-	OnNewTankAudioEffect->SetupAttachment(DefaultMesh);
-
-    bIsColapsed = false;
+    OnNewTankSpawnAudioEffect = CreateDefaultSubobject<UAudioComponent>("OnNewTankAudioEffect");
+	OnNewTankSpawnAudioEffect->SetupAttachment(DefaultMesh);
 }
 
-bool ATankFactory::CauseDamage(FDamageData DamageData){
-    return HealthComponent->TakeDamage(DamageData);
-}
-
-void ATankFactory::Die(){
-    if(IsDestroyed())
-        return;
-
-
+void ATankFactory::OnDieEvent(){
     IILevelChanger* ILevelChanger = Cast<IILevelChanger>(LevelChanger);
 	if(ILevelChanger)
         ILevelChanger->SetActive(true);
     
-
     ChangeMeshState(false);
-
 
     GetWorld()->GetTimerManager().ClearTimer(TankSpawningDelayTimerHandle);
 
-    ColapseEffect->ActivateSystem();
-	ColapseAudioEffect->Play();
+    UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyedEffect, GetActorTransform());
+    UGameplayStatics::PlaySoundAtLocation(GetWorld(), DestroyedAudioEffect, GetActorLocation());
 
     if(ColapseForceEffect){
 		FForceFeedbackParameters ColapseForceEffectParams;
@@ -79,16 +58,7 @@ void ATankFactory::Die(){
 	}
 
 	if(ColapseShake)
-        GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(ColapseShake);
-
-    bIsColapsed = true;		
-}
-
-int ATankFactory::GetScoreValue() const {
-    if(IsDestroyed())
-        return 0;
-
-	return ElminatedScoreValue;
+        GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(ColapseShake);	
 }
 
 void ATankFactory::Destroyed(){
@@ -98,14 +68,11 @@ void ATankFactory::Destroyed(){
 void ATankFactory::BeginPlay(){
 	Super::BeginPlay();
 	
-
     ChangeMeshState(true);
-
 
 	IILevelChanger* ILevelChanger = Cast<IILevelChanger>(LevelChanger);
 	if(ILevelChanger)
         ILevelChanger->SetActive(false);
-    
 
     GetWorld()->GetTimerManager().SetTimer(TankSpawningDelayTimerHandle, this, &ATankFactory::SpawnNewTank, SpawnRate, true, SpawnRate);
 }
@@ -123,10 +90,6 @@ void ATankFactory::SpawnNewTank(){
 	NewTank->LocalPatrollingPoints = PatrollingWays;
 	NewTank->FinishSpawning(SpawnTransform);
 
-    OnNewTankEffect->ActivateSystem();
-	OnNewTankAudioEffect->Play();
-}
-
-bool ATankFactory::IsDestroyed() const {
-    return bIsColapsed;
+    OnNewTankSpawnEffect->ActivateSystem();
+	OnNewTankSpawnAudioEffect->Play();
 }
