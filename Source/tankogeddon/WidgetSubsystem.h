@@ -20,7 +20,7 @@ class TANKOGEDDON_API UWidgetSubsystem : public UGameInstanceSubsystem{
 		bool RemoveWidgetFromViewport(EWidget RequiredWidget);
 		bool DeleteWidget(EWidget RequiredWidget);
 
-		UUserWidget* CreateWidget(EWidget RequiredWidget);
+		UUserWidget* AllocateWidget(EWidget RequiredWidget);
 
 	protected:
 		UPROPERTY(EditAnywhere)
@@ -29,6 +29,6 @@ class TANKOGEDDON_API UWidgetSubsystem : public UGameInstanceSubsystem{
 		virtual void BeginDestroy() override;
 
 	private:
-		TMap<UUserWidget*, EWidget> AllocatedWidgets;
-		TMap<UUserWidget*, EWidget> ViewportWidgets;
+		TMap<EWidget, UUserWidget*> AllocatedWidgets;
+		TMap<EWidget, UUserWidget*> ViewportWidgets;
 };

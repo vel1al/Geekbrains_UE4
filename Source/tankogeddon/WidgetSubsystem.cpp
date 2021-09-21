@@ -1,54 +1,54 @@
 #include "WidgetSubsystem.h"
 
-#include "Blueprint/UUserWidget.h"
+#include "Blueprint/UserWidget.h"
 
 
-bool AddWidgetToViewport(EWidget RequiredWidget, int ZOrder = 0){
+bool UWidgetSubsystem::AddWidgetToViewport(EWidget RequiredWidget, int ZOrder){
     if(RequiredWidget == EWidget::None)
         return false;
     
-    UUserWidget* NewWidget = AlocatedWidgets.Findkey(RequiredWidget);
+    UUserWidget* NewWidget = *AllocatedWidgets.Find(RequiredWidget);
 
     if(!NewWidget)
         return false;
 
     NewWidget->AddToViewport(ZOrder);
     
-    ViewportWidgets.Add(NewWidget, RequiredWidget);
+    ViewportWidgets.Add(RequiredWidget, NewWidget);
 
     return true;
 }
 
-bool RemoveWidgetFromViewport(EWidget RequiredWidget){
+bool UWidgetSubsystem::RemoveWidgetFromViewport(EWidget RequiredWidget){
     if(RequiredWidget == EWidget::None)
         return false;
 
-    UUserWidget* RequiredWidget = ViewportWidgets.Findkey(RequiredWidget);
+    UUserWidget* FindedWidget = *ViewportWidgets.Find(RequiredWidget);
 
-    if(!UUserWidget)
+    if(!FindedWidget)
         return false;
 
-    RequiredWidget->RemoveFromParent();
+    FindedWidget->RemoveFromParent();
 
     return true;
 }
 
-bool DeleteWidget(EWidget RequiredWidget){
+bool UWidgetSubsystem::DeleteWidget(EWidget RequiredWidget){
     if(RequiredWidget == EWidget::None)
         return false;
 
-    UUserWidget* RequiredWidget = AlocatedWidgets.Findkey(RequiredWidget);
+    UUserWidget* FindedWidget = *AllocatedWidgets.Find(RequiredWidget);
 
-    if(!UUserWidget)
+    if(!FindedWidget)
         return false;
 
-    RequiredWidget->RemoveFromParent();
-    RequiredWidget->BeginDestroy();
+    FindedWidget->RemoveFromParent();
+    FindedWidget->BeginDestroy();
 
     return true;
 }
 
-UUserWidget* CreateWidget(EWidget RequiredWidget){
+UUserWidget* UWidgetSubsystem::AllocateWidget(EWidget RequiredWidget){
     if(RequiredWidget == EWidget::None)
         return nullptr;
 
@@ -57,13 +57,13 @@ UUserWidget* CreateWidget(EWidget RequiredWidget){
     if(!NewWidget)
         return nullptr;
 
-    AllocatedWidgets.Add(NewWidget, RequiredWidget);
+    AllocatedWidgets.Add(RequiredWidget, NewWidget);
     
     return NewWidget;
 }
 
 
-void BeginDestroy(){
+void UWidgetSubsystem::BeginDestroy(){
     AllocatedWidgets.Empty();
     ViewportWidgets.Empty();
 }

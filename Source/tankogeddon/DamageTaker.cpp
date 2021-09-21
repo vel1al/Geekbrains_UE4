@@ -14,8 +14,8 @@ ADamageTaker::ADamageTaker(){
     HPBar = CreateDefaultSubobject<UWidgetComponent>("HPBar");
     HPBar->SetWidgetClass(UHPBarWidget::StaticClass());
 
-    HPBarWidget = Cast<UMyProgressWidget>(comp->GetUserWidgetObject());
-    HPBarWidget->SetHealth(MaxHealth/MaxHealth);
+    HPBarWidget = Cast<UHPBarWidget>(HPBar->GetUserWidgetObject());
+    HPBarWidget->SetHP(MaxHealth/MaxHealth);
 
 	CurrentHealth = MaxHealth;
 }
@@ -30,10 +30,10 @@ bool ADamageTaker::CauseDamage(FDamageData DamageData){
 	CurrentHealth -= TakenDamageValue;
     if (CurrentHealth <= 0){
         bWasDestroyed = true;
-        HPBarWidget->SetHealth(0);
+        HPBarWidget->SetHP(0);
     }
     else
-        HPBarWidget->SetHealth(CurrentHealth/MaxHealth);
+        HPBarWidget->SetHP(CurrentHealth/MaxHealth);
 
 	bIsDestroyed = bWasDestroyed;
 	if(bIsDestroyed)
@@ -59,6 +59,8 @@ void ADamageTaker::AddHealth(const float AddiditionalHealthValue){
 
     if (CurrentHealth > MaxHealth)
         CurrentHealth = MaxHealth;
+
+    HPBarWidget->SetHP(CurrentHealth/MaxHealth);    
 }
 
 void ADamageTaker::OnDieEvent() {

@@ -1,28 +1,29 @@
 #include "MainMenuHUD.h"
 
 #include "WidgetSubsystem.h"
+#include "MainMenuWidget.h"
 
 #include "Blueprint/UserWidget.h"
 #include "GameStructs.h"
 
 
 void AMainMenuHUD::BeginPlay() {
-    UUserWidget* Menu = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->CreateWidget(EWidget::MainMenu);
+    UUserWidget* Menu = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::MainMenu);
 
-    AllocatedMenu = Cast<UMainMenuWidget>(Menu);
-    if(AllocatedMenu)
-        if(GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddToViewport(EWidget::MainMenu)){
-            AllocatedMenu->OnNewGameStart.AddUObject(this, &AMainMenuHUD::OnClosingMenu);
-            AllocatedMenu->OnQuitGame.AddUObject(this, &AMainMenuHUD::OnClosingMenu);
+    AllocatedMainMenu = Cast<UMainMenuWidget>(Menu);
+    if(AllocatedMainMenu)
+        if(GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::MainMenu)){
+            AllocatedMainMenu->OnNewGameStart.AddUObject(this, &AMainMenuHUD::OnClosingMenu);
+            AllocatedMainMenu->OnQuitGame.AddUObject(this, &AMainMenuHUD::OnClosingMenu);
         }
 }
 
-void AMainMenuHUD::EndPlay() {
+void AMainMenuHUD::BeginDestroy() {
     OnClosingMenu();
 }
 
 void AMainMenuHUD::OnClosingMenu(){
-    UUserWidget* Menu = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->DeleteWidget(EWidget::MainMenu);
+    GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->DeleteWidget(EWidget::MainMenu);
 
-    AllocatedMenu == nullptr;
+    AllocatedMainMenu = nullptr;
 }

@@ -7,23 +7,29 @@
 
 
 //idk what do with garbagecollector
-void ATankHud::SetActivePauseMenu(bool bActive) {
-    if(AllocatedWidgets[EWidget::Pause])
-        AllocatedWidgets[EWidget::Pause]->SetEnabled(bActive);
+void ATankHUD::SetActivePauseMenu(bool bActive) {
+    if(AllocatedWidgets.Find(EWidget::Pause)){
+        UUserWidget* buffer = *AllocatedWidgets.Find(EWidget::Pause);
+        buffer->SetIsEnabled(bActive);
+    }
 }
-void ATankHud::SetActiveHUD(bool bActive) {    
-    if(AllocatedWidgets[EWidget::HUD])
-        AllocatedWidgets[EWidget::HUD]->SetEnabled(bActive);
+void ATankHUD::SetActiveHUD(bool bActive) {    
+    if(AllocatedWidgets.Find(EWidget::HUD)){
+        UUserWidget* buffer = *AllocatedWidgets.Find(EWidget::HUD);
+        buffer->SetIsEnabled(bActive);
+    }
 }
-void ATankHud::SetActiveGaveOver(bool bActive) {
-    if(AllocatedWidgets[EWidget::GameOver])
-        AllocatedWidgets[EWidget::GameOver]->SetEnabled(bActive);
+void ATankHUD::SetActiveGaveOver(bool bActive) {
+    if(AllocatedWidgets.Find(EWidget::GameOver)){
+        UUserWidget* buffer = *AllocatedWidgets.Find(EWidget::GameOver);
+        buffer->SetIsEnabled(bActive);
+    }
 }
 
-void ATankHud::BeginPlay() {
-    UUserWidget* PauseMenu = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->CreateWidget(EWidget::Pause);
-    UUserWidget* HUD = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->CreateWidget(EWidget::HUD);
-    UUserWidget* GameOver = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->CreateWidget(EWidget::GameOver);
+void ATankHUD::BeginPlay() {
+    UUserWidget* PauseMenu = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::Pause);
+    UUserWidget* HUD = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::HUD);
+    UUserWidget* GameOver = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::GameOver);
 
     AllocatedWidgets.Add(EWidget::Pause, PauseMenu);
     AllocatedWidgets.Add(EWidget::HUD, HUD);
@@ -31,10 +37,10 @@ void ATankHud::BeginPlay() {
 
     GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::HUD);
 }
-void ATankHud::EndPlay() {
+void ATankHUD::BeginDestroy() {
     AllocatedWidgets.Empty();
 }
 
-void ATankHud::OnGameOverEnabling() {
+void ATankHUD::OnGameOverEnabling() {
     //do some effects
 }

@@ -5,9 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "GameStructs.h"
+#include "Blueprint/UserWidget.h"
 #include "TankHUD.generated.h"
-
-class UUserWidget; 
 
 
 UCLASS()
@@ -21,10 +20,10 @@ class TANKOGEDDON_API ATankHUD : public AHUD{
 
 	protected:
 		virtual void BeginPlay() override;
-		virtual void EndPlay() override;
+		virtual void BeginDestroy() override;
 
 	private:
 		void OnGameOverEnabling();
 
-		TMap<EWidget, UUSerWidget*> AllocatedWidgets;
+		TMap<EWidget, UUserWidget*> AllocatedWidgets;
 };

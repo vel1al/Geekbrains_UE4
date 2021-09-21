@@ -3,7 +3,7 @@
 #include "Components/ProgressBar.h"
 
 
-void SetHP(int Percentage) {
+void UHPBarWidget::SetHP(int Percentage) {
     if(ProgressBar)
         ProgressBar->SetPercent(Percentage);
 }

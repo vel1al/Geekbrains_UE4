@@ -15,7 +15,7 @@ class TANKOGEDDON_API AMainMenuHUD : public AHUD{
 	
 	protected:
 		virtual void BeginPlay() override;
-		virtual void EndPlay() override;
+		virtual void BeginDestroy() override;
 
 	private:
 		void OnClosingMenu();
