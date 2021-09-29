@@ -5,13 +5,6 @@
 
 #include "MainMenuWidget.generated.h"
 
-class UWidgetAnimation;
-class UWidgetSwitcher;
-class UDialogWidget;
-class UVerticalBox;
-class UBorder;
-class UButton;
-
 UENUM()
 enum class EStatus : uint8{
     None = 0 UMETA(DisplayName = "None"),
@@ -20,10 +13,25 @@ enum class EStatus : uint8{
     ApplyDialog = 3 UMETA(DisplayName = "ApplyDialog"),
     PlayGame = 4 UMETA(DisplayName = "PlayGame"),
     Settings = 5 UMETA(DisplayName = "Settings"),
-    Audio = 6 UMETA(DisplayName = "Audio"),
-    Video = 7 UMETA(DisplayName = "Video"),
-    Graphics = 8 UMETA(DisplayName = "Graphics")
+    SubSettings = 6 UMETA(DisplayName = "SubSettings")
 };
+
+UENUM()
+enum class ESubSettingsStatus : uint8 {
+    None = 0 UMETA(DisplayName = "None"),
+    Audio = 1 UMETA(DisplayName = "Audio"),
+    Video = 2 UMETA(DisplayName = "Video"),
+    Graphics = 3 UMETA(DisplayName = "Graphics")
+};
+
+class UWidgetAnimation;
+class UWidgetSwitcher;
+class UDialogWidget;
+class UVerticalBox;
+class UCanvasPanel;
+class UWidget;
+class UBorder;
+class UButton;
 
 
 UCLASS()
@@ -38,6 +46,7 @@ class TANKOGEDDON_API UMainMenuWidget : public UUserWidget{
 
         FOnNewGameStart OnNewGameStart;
         FOnQuitGame OnQuitGame;
+        FWidgetAnimationDynamicEvent OnAnimationEnd;
 
     protected:
         void CallConfirmationDialog(void (UMainMenuWidget::*OnApplyFunc)(), void (UMainMenuWidget::*OnCancelFunc)());
@@ -45,12 +54,42 @@ class TANKOGEDDON_API UMainMenuWidget : public UUserWidget{
 
         UPROPERTY()
         TMap<EStatus, EStatus> BackBindings;
-
+        
         //Animations
-            UPROPERTY()
-            TMap<EStatus, UWidgetAnimation*> MenuChangingAnimations;
-            UPROPERTY()
-            TMap<EStatus, UWidgetAnimation*> MenuChosenAnimations;
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* MainButtonsChangedAnimations;
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* MainButtonsChoosenAnimations;
+
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* SettingsChangedAnimations;
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* SettingsChoosenAnimations;
+
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* PlayGameChangedAnimations;
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* PlayGameChoosenAnimations;
+
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* SubSettingsChangedAnimations;
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* SubSettingsChoosenAnimations;
+
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* ApplyDialogChangedAnimations;
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* ApplyDialogChoosenAnimations;
+
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* ConfirmationDialogChangedAnimations;
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* ConfirmationDialogChoosenAnimations;
+
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* WidgetLabelOnChangedAnimations;
+            UPROPERTY(Transient, BlueprintReadWrite, meta = (BindWidgetAnim))
+            UWidgetAnimation* WidgetLabelOnChoosenAnimations;
 
         //Dialogs
             UPROPERTY(meta = (BindWidgetOptional))
@@ -62,7 +101,9 @@ class TANKOGEDDON_API UMainMenuWidget : public UUserWidget{
             UPROPERTY(meta = (BindWidget))
             UVerticalBox* MainButtons;
             UPROPERTY(meta = (BindWidget))
-            UVerticalBox* Settings;
+            UCanvasPanel* Settings;
+            UPROPERTY(meta = (BindWidget))
+            UCanvasPanel* SubSettings;
             UPROPERTY(meta = (BindWidget))
             UVerticalBox* PlayGame;
 
@@ -76,7 +117,7 @@ class TANKOGEDDON_API UMainMenuWidget : public UUserWidget{
             UBorder* Graphics;
 
         //Misc
-            UPROPERTY(meta = (BindWidgetOptional))
+            UPROPERTY(meta = (BindWidget))
             UWidgetSwitcher* SettingsWidgetSwitcher;
 
         //Buttons
@@ -85,11 +126,15 @@ class TANKOGEDDON_API UMainMenuWidget : public UUserWidget{
                 UButton* NewGame_btn;
                 UPROPERTY(meta = (BindWidgetOptional))
                 UButton* LoadGame_btn;
+                UPROPERTY(meta = (BindWidgetOptional))
+                UButton* QuitPlayGame_btn;
 
                 UFUNCTION()
                 void OnNewGameButtonPressed();
                 UFUNCTION()
                 void OnLoadGameButtonPressed();
+                UFUNCTION()
+                void OnQuitPlayGameButtonPressed();
 
             //MainButtons
                 UPROPERTY(meta = (BindWidgetOptional))
@@ -146,11 +191,29 @@ class TANKOGEDDON_API UMainMenuWidget : public UUserWidget{
 
         UFUNCTION()
         void SetActive(EStatus RequiredMenu, bool bActive = false);
+        UFUNCTION()
+        void SetSubSetting(ESubSettingsStatus SubSetting);
 
         UFUNCTION()
         void DisableCurrent();
 
+        UFUNCTION()
+        void ApllySettings();
+        UFUNCTION()
+        void CancelSettings();
+        
+        UFUNCTION()
+        void PlayNextAnimation();
+
+    protected:
+        //virtual void BeginDestroy() override;
+
     private:
+        TMap<EStatus, UWidget*> Bindings;
+        TMap<ESubSettingsStatus, int> SettingsBindings;
+        TMap<EStatus, UWidgetAnimation*> MenuChangingAnimations;
+        TMap<EStatus, UWidgetAnimation*> MenuChosenAnimations;
+
         bool bIsSettingsApllyed = false;
         bool bIsAnyDialogOppened = false;
 

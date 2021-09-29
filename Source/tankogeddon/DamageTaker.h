@@ -38,6 +38,7 @@ class TANKOGEDDON_API ADamageTaker : public APawn{
 	protected:
 		UHPBarWidget* HPBarWidget;
 
+		virtual void BeginPlay() override;
 		virtual void OnDieEvent();
 
 		float CurrentHealth;

@@ -1,0 +1,1 @@
+#include "IDamakeTaker.h"

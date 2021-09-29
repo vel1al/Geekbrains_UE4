@@ -7,6 +7,7 @@
 
 class UButton;
 
+
 UCLASS()
 class TANKOGEDDON_API UDialogWidget : public UUserWidget{
         GENERATED_BODY()

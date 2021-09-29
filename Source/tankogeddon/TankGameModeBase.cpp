@@ -13,3 +13,10 @@ void ATankGameModeBase::PlayerDie(){
     if(TankHUD)
         TankHUD->SetActiveGaveOver(true); 
 }
+
+TSubclassOf<UUserWidget> ATankGameModeBase::GetDefaultClass(EWidget Key){
+    if(DefaultWidgetClases.Contains(Key))
+        return DefaultWidgetClases[Key];
+
+    return nullptr;
+}

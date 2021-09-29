@@ -5,10 +5,12 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameStructs.h"
+
 #include "WidgetSubsystem.generated.h"
 
-
+class ATankGameModeBase;
 class UUserWidget;
+
 
 UCLASS()
 class TANKOGEDDON_API UWidgetSubsystem : public UGameInstanceSubsystem{
@@ -23,12 +25,12 @@ class TANKOGEDDON_API UWidgetSubsystem : public UGameInstanceSubsystem{
 		UUserWidget* AllocateWidget(EWidget RequiredWidget);
 
 	protected:
-		UPROPERTY(EditAnywhere)
-    	TMap<EWidget, TSubclassOf<UUserWidget>> DefaultWidgetClases;
-
-		virtual void BeginDestroy() override;
+		//virtual void BeginDestroy() override;
 
 	private:
+		void UpdateGameModeRef();
+
+    	ATankGameModeBase* CurrentGameMode;
 		TMap<EWidget, UUserWidget*> AllocatedWidgets;
 		TMap<EWidget, UUserWidget*> ViewportWidgets;
 };

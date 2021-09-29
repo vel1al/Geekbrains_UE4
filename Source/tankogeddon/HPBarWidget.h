@@ -17,5 +17,5 @@ class TANKOGEDDON_API UHPBarWidget : public UUserWidget{
 
     protected:
         UPROPERTY(meta = (BindWidget))
-        UProgressBar* ProgressBar;
+        UProgressBar* HPProgressBar;
 };

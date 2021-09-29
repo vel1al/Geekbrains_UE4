@@ -9,7 +9,7 @@ void UDialogWidget::NativeConstruct() {
     if(Apply_btn)
         Apply_btn->OnClicked.AddDynamic(this, &UDialogWidget::OnApplyButtonPressed);
     if(Cancel_btn)
-        Apply_btn->OnClicked.AddDynamic(this, &UDialogWidget::OnCancelButtonPressed);
+        Cancel_btn->OnClicked.AddDynamic(this, &UDialogWidget::OnCancelButtonPressed);
 }
 
 void UDialogWidget::OnApplyButtonPressed() {
@@ -18,6 +18,4 @@ void UDialogWidget::OnApplyButtonPressed() {
 
 void UDialogWidget::OnCancelButtonPressed() {
     OnCancel.Broadcast();
-
-    SetIsEnabled(false);
 }

@@ -1,7 +1,12 @@
 #include "WidgetSubsystem.h"
 
 #include "Blueprint/UserWidget.h"
+#include "TankGameModeBase.h"
 
+
+void UWidgetSubsystem::UpdateGameModeRef(){
+    CurrentGameMode = Cast<ATankGameModeBase>(GetWorld()->GetAuthGameMode());
+}
 
 bool UWidgetSubsystem::AddWidgetToViewport(EWidget RequiredWidget, int ZOrder){
     if(RequiredWidget == EWidget::None)
@@ -51,19 +56,26 @@ bool UWidgetSubsystem::DeleteWidget(EWidget RequiredWidget){
 UUserWidget* UWidgetSubsystem::AllocateWidget(EWidget RequiredWidget){
     if(RequiredWidget == EWidget::None)
         return nullptr;
+    
+    if(!(CurrentGameMode)){
+        UpdateGameModeRef();
 
-    UUserWidget* NewWidget = CreateWidget<UUserWidget>(GetWorld(), DefaultWidgetClases[RequiredWidget]);
+        if(!(CurrentGameMode))
+            return nullptr;
+    }
+
+    UUserWidget* NewWidget = CreateWidget<UUserWidget>(GetWorld(), CurrentGameMode->GetDefaultClass(RequiredWidget));
 
     if(!NewWidget)
         return nullptr;
 
     AllocatedWidgets.Add(RequiredWidget, NewWidget);
-    
+        
     return NewWidget;
 }
 
-
-void UWidgetSubsystem::BeginDestroy(){
-    AllocatedWidgets.Empty();
-    ViewportWidgets.Empty();
-}
+// void UWidgetSubsystem::BeginDestroy(){
+//     // AllocatedWidgets.Empty();
+//     // ViewportWidgets.Empty();
+//     // CurrentGameMode = nullptr;
+// }

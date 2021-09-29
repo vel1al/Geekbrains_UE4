@@ -4,6 +4,6 @@
 
 
 void UHPBarWidget::SetHP(int Percentage) {
-    if(ProgressBar)
-        ProgressBar->SetPercent(Percentage);
+    if(HPProgressBar)
+        HPProgressBar->SetPercent(Percentage);
 }

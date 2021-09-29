@@ -37,9 +37,9 @@ void ATankHUD::BeginPlay() {
 
     GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::HUD);
 }
-void ATankHUD::BeginDestroy() {
-    AllocatedWidgets.Empty();
-}
+// void ATankHUD::BeginDestroy() {
+//     AllocatedWidgets.Empty();
+// }
 
 void ATankHUD::OnGameOverEnabling() {
     //do some effects

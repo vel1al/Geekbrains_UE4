@@ -10,7 +10,7 @@ int ATankPlayerState::GetScore(){
 }
 
 void ATankPlayerState::PlayerDie(){
-    bIsPlayerAlive = true;
+    bIsPlayerAlive = false;
 
     ATankGameModeBase* CurrentGameMode = Cast<ATankGameModeBase>(GetWorld()->GetAuthGameMode());
     if(CurrentGameMode)
