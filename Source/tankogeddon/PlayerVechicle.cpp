@@ -4,6 +4,9 @@
 
 #include "Kismet/GameplayStatics.h"
 
+APlayerVechicle::APlayerVechicle(){
+    PrimaryActorTick.bCanEverTick = true;
+}
 
 void APlayerVechicle::IncrementScore(AActor* SecondActor){
 	//PlayerState->IncrementScore();

@@ -2,7 +2,9 @@
 
 #include "WidgetSubsystem.h"
 
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Blueprint/UserWidget.h"
+
 #include "GameStructs.h"
 
 
@@ -36,6 +38,15 @@ void ATankHUD::BeginPlay() {
     AllocatedWidgets.Add(EWidget::GameOver, GameOver);
 
     GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::HUD);
+
+    if (GetWorld()){
+        APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+            
+        if (PlayerController){
+            UWidgetBlueprintLibrary::SetInputMode_GameOnly(PlayerController);
+            PlayerController->bShowMouseCursor = false;
+        }
+    }
 }
 // void ATankHUD::BeginDestroy() {
 //     AllocatedWidgets.Empty();

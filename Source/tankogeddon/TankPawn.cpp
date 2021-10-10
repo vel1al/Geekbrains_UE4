@@ -43,6 +43,8 @@ ATankPawn::ATankPawn(){
 
 	PlayerHitAudioEffect = CreateDefaultSubobject<UAudioComponent>("PlayerHitAudioEffect");
 	PlayerHitAudioEffect->SetupAttachment(RootComponent);
+
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void ATankPawn::InvalidateTurret(int RequiredSlot){

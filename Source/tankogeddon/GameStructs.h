@@ -71,3 +71,14 @@ struct FPhysicsProjectilePreStartData{
     UPROPERTY()
     float CanonDamage;
 };
+
+USTRUCT(BlueprintType)
+struct FObstacle{
+	GENERATED_BODY()
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Meta = (MakeEditWidget = true))
+	TArray<FVector2D> Points;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TArray<FLinearColor> Color;
+};

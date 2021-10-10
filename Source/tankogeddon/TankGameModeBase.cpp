@@ -20,3 +20,7 @@ TSubclassOf<UUserWidget> ATankGameModeBase::GetDefaultClass(EWidget Key){
 
     return nullptr;
 }
+
+TArray<FObstacle> ATankGameModeBase::GetDefaultObstacles(){
+    return DefaultObstacles;
+}
