@@ -21,12 +21,12 @@ class TANKOGEDDON_API ATankGameModeBase : public AGameModeBase{
 		void OnPlayerDieEvent();
 
 		TSubclassOf<UUserWidget> GetDefaultClass(EWidget Key); 
-		TArray<FObstacle> GetDefaultObstacles();
+		TArray<FFigure> GetDefaultFigures();
 
 	protected:
 		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
     	TMap<EWidget, TSubclassOf<UUserWidget>> DefaultWidgetClases;
 
 		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-		TArray<FObstacle> DefaultObstacles;
+		TArray<FFigure> DefaultFigures;
 };

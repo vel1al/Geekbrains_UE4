@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/SCompoundWidget.h"
+#include "MiniMapWidgetStyle.h"
 #include "GameStructs.h"
 
 
@@ -20,14 +21,14 @@ class TANKOGEDDON_API SMiniMapWidget : public SCompoundWidget{
 			_PlayerPosition(FVector2D::ZeroVector)
 		{}
 		
-		SLATE_ARGUMENT(UTexture2D*, PlayerSign)
-		SLATE_ARGUMENT(UTexture2D*, BorderTexture)
-		SLATE_ARGUMENT(UTexture2D*, OutlineTexture)
+		// SLATE_ARGUMENT(UTexture2D*, PlayerSign)
+		// SLATE_ARGUMENT(UTexture2D*, BorderTexture)
+		// SLATE_ARGUMENT(UTexture2D*, OutlineTexture)
 
 		SLATE_ARGUMENT(FVector2D, TopLeftCorner)
 		SLATE_ARGUMENT(FVector2D, BottomRightCorner)
 
-		SLATE_ARGUMENT(TArray<FObstacle>, Obstacles)
+		SLATE_ARGUMENT(TArray<FFigure>, Figures)
 
 		SLATE_ARGUMENT(FVector2D, MapBottomRightCorner)
 		SLATE_ARGUMENT(FVector2D, MapTopLeftCorner)
@@ -36,6 +37,8 @@ class TANKOGEDDON_API SMiniMapWidget : public SCompoundWidget{
 
 		SLATE_ATTRIBUTE(bool, bIsCenteringToPlayer)
 		SLATE_ATTRIBUTE(float, SizeAdjustment)
+
+		SLATE_STYLE_ARGUMENT(FMiniMapStyle, Style)
 
 		SLATE_END_ARGS()
 
@@ -52,9 +55,11 @@ class TANKOGEDDON_API SMiniMapWidget : public SCompoundWidget{
 	protected:
 		FVector2D ConvertWorldToLocalLocation(FVector2D WorldLocation) const;
 
-		UTexture2D* PlayerSign;
-		UTexture2D* BorderTexture;
-		UTexture2D* OutlineTexture;
+		const FMiniMapStyle* MiniMapStyle;
+
+		// UTexture2D* PlayerSign;
+		// UTexture2D* BorderTexture;
+		// UTexture2D* OutlineTexture;
 
 		FVector2D TopLeftCorner;
 		FVector2D BottomRightCorner;
@@ -62,7 +67,7 @@ class TANKOGEDDON_API SMiniMapWidget : public SCompoundWidget{
 		FVector2D MapTopLeftCorner;
 		FVector2D MapBottomRightCorner;
 
-		TArray<FObstacle> Obstacles;
+		TArray<FFigure> Figures;
 
 	private:
 		TArray<FObstacle> LocalSizedObstacles;

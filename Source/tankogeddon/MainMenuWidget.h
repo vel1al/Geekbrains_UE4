@@ -2,6 +2,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "MainMenuWidgetStyle.h"
+
+#include "GameStructs.h"
 
 #include "MainMenuWidget.generated.h"
 
@@ -32,6 +35,7 @@ class UCanvasPanel;
 class UWidget;
 class UBorder;
 class UButton;
+class UImage;
 
 
 UCLASS()
@@ -40,6 +44,7 @@ class TANKOGEDDON_API UMainMenuWidget : public UUserWidget{
 
     public:
         void NativeConstruct() override;
+        void NativePreConstruct() override;
 
         DECLARE_EVENT(UMainMenuWidget, FOnNewGameStart);
         DECLARE_EVENT(UMainMenuWidget, FOnQuitGame);
@@ -96,6 +101,10 @@ class TANKOGEDDON_API UMainMenuWidget : public UUserWidget{
             UDialogWidget* OnApplyDialogWidget;
             UPROPERTY(meta = (BindWidgetOptional))
             UDialogWidget* OnConfirmationDialogWidget;
+
+        //GameIcon
+            UPROPERTY(meta = (BindWidgetOptional))
+            UImage* GameIcon;
 
         //Boxes
             UPROPERTY(meta = (BindWidget))
@@ -181,6 +190,9 @@ class TANKOGEDDON_API UMainMenuWidget : public UUserWidget{
                 UFUNCTION()
                 void OnQuitSettingsButtonPressed();
 
+        UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+		ETheme WidgetTheme;
+
         UFUNCTION()
         void GoTo(EStatus NextMenu);
         UFUNCTION()
@@ -206,9 +218,10 @@ class TANKOGEDDON_API UMainMenuWidget : public UUserWidget{
         void PlayNextAnimation();
 
     protected:
-        //virtual void BeginDestroy() override;
+        FMainMenuStyle GetMainMenuStyle(ETheme theme);
 
-    private:
+		FMainMenuStyle MainMenuStyle;
+
         TMap<EStatus, UWidget*> Bindings;
         TMap<ESubSettingsStatus, int> SettingsBindings;
         TMap<EStatus, UWidgetAnimation*> MenuChangingAnimations;

@@ -22,6 +22,8 @@ class TANKOGEDDON_API UWidgetSubsystem : public UGameInstanceSubsystem{
 		bool RemoveWidgetFromViewport(EWidget RequiredWidget);
 		bool DeleteWidget(EWidget RequiredWidget);
 
+		UUserWidget* GetWidgetDirectly(EWidget RequiredWidget);
+
 		UUserWidget* AllocateWidget(EWidget RequiredWidget);
 
 	protected:

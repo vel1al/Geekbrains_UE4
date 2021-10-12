@@ -1,5 +1,7 @@
 #include "MinimapWidget.h"
+#include "MiniMapWidgetStyle.h"
 #include "TankGameModeBase.h"
+#include "StylesSet.h"
 
 
 UMinimapWidget::UMinimapWidget(){
@@ -38,24 +40,42 @@ float UMinimapWidget::GetSizeAdjustment(){
     return SizeAdjustment;
 }
 
+FMiniMapStyle UMinimapWidget::GetMiniMapStyle(ETheme theme){
+    FMiniMapStyle ReturnValue;
+    
+    switch(theme){
+        case ETheme::Bright:    ReturnValue = FStyleSet::Get().GetWidgetStyle<FMiniMapStyle>("Bright_MiniMapStyle");
+        break;
+        case ETheme::Dark:      ReturnValue = FStyleSet::Get().GetWidgetStyle<FMiniMapStyle>("Dark_MiniMapStyle");
+        break;
+        default:                ReturnValue = FStyleSet::Get().GetWidgetStyle<FMiniMapStyle>("Default_MiniMapStyle");
+        break;
+    }
+
+    return ReturnValue;
+}
+
 TSharedRef<SWidget> UMinimapWidget::RebuildWidget(){
     ATankGameModeBase* GameMode = Cast<ATankGameModeBase>(GetWorld()->GetAuthGameMode());
 
-    TArray<FObstacle> Obstacles;
+    MiniMapStyle = GetMiniMapStyle(WidgetTheme);
+
+    TArray<FFigure> Figures;
     if(GameMode)
-        Obstacles = GameMode->GetDefaultObstacles();
+        Figures = GameMode->GetDefaultFigures();
     else
-        Obstacles = TArray<FObstacle>();
+        Figures = TArray<FFigure>();
 
     AllocatedMiniMap = SNew(SMiniMapWidget)
-        .PlayerSign(PlayerSign)
-        .BorderTexture(BorderTexture)
-        .OutlineTexture(OutlineTexture)
-        .Obstacles(Obstacles)
+        // .PlayerSign(PlayerSign)
+        // .BorderTexture(BorderTexture)
+        // .OutlineTexture(OutlineTexture)
+        .Figures(Figures)
         .TopLeftCorner(TopLeftCorner)
         .BottomRightCorner(BottomRightCorner)
         .MapTopLeftCorner(MapTopLeftCorner)
-        .MapBottomRightCorner(MapBottomRightCorner);
+        .MapBottomRightCorner(MapBottomRightCorner)
+        .Style(&MiniMapStyle);
 
     return AllocatedMiniMap.ToSharedRef();
 }

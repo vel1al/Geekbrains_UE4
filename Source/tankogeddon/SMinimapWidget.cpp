@@ -5,14 +5,14 @@
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SMiniMapWidget::Construct(const FArguments& InArgs){	
-	PlayerSign = InArgs._PlayerSign;
-	BorderTexture = InArgs._BorderTexture;
-	OutlineTexture = InArgs._OutlineTexture;
+	// PlayerSign = InArgs._PlayerSign;
+	// BorderTexture = InArgs._BorderTexture;
+	// OutlineTexture = InArgs._OutlineTexture;
 	
 	TopLeftCorner =	InArgs._TopLeftCorner;
 	BottomRightCorner = InArgs._BottomRightCorner;
 	
-	Obstacles = InArgs._Obstacles;
+	Figures = InArgs._Figures;
 
 	MapBottomRightCorner = InArgs._MapBottomRightCorner;
 	MapTopLeftCorner = InArgs._MapTopLeftCorner;
@@ -22,13 +22,17 @@ void SMiniMapWidget::Construct(const FArguments& InArgs){
 	bIsCenteringToPlayer = InArgs._bIsCenteringToPlayer.Get();
 	SizeAdjustment = InArgs._SizeAdjustment.Get();
 
+	MiniMapStyle = InArgs._Style;
 
-	for(auto& obstacle : Obstacles){
+	for(auto& figure : Figures){
+		TArray<FLinearColor> Colors;
 		FObstacle LocalSizeObstacle;
 
-		LocalSizeObstacle.Color = obstacle.Color;
+		Colors.Init(MiniMapStyle->LinesColor, figure.Points.Num());
 
-		for(auto& point : obstacle.Points)
+		LocalSizeObstacle.Color = Colors;
+
+		for(auto& point : figure.Points)
 			LocalSizeObstacle.Points.Add(ConvertWorldToLocalLocation(point));
 
 		LocalSizedObstacles.Add(LocalSizeObstacle);
@@ -54,25 +58,20 @@ int32 SMiniMapWidget::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedG
 	FVector2D LocalSize = AllottedGeometry.GetLocalSize();
 
 	FGeometry MiniMapBoxGeometry = AllottedGeometry;
-	
-	FSlateBrush BorderBrush;
-	FSlateBrush OutlineBrush;
-	
-	BorderBrush.SetResourceObject(BorderTexture);
-	OutlineBrush.SetResourceObject(OutlineTexture);
+
 
 	FSlateDrawElement::MakeBox(
 			OutDrawElements, 
 			LayerId, 
 			MiniMapBoxGeometry.ToPaintGeometry(TopLeftCorner, BottomRightCorner),
-			&BorderBrush
+			&MiniMapStyle->MapBrush
 	);
 	
 	FSlateDrawElement::MakeBox(
 			OutDrawElements, 
 			++LayerId, 
 			MiniMapBoxGeometry.ToPaintGeometry(TopLeftCorner, BottomRightCorner),
-			&OutlineBrush
+			&MiniMapStyle->MapBorderBrush
 	);
 
 	for(auto& obstacle : LocalSizedObstacles){
@@ -85,14 +84,11 @@ int32 SMiniMapWidget::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedG
 		);
 	}
 
-	FSlateBrush PlayerBrush;
-	PlayerBrush.SetResourceObject(PlayerSign); 
-
 	FSlateDrawElement::MakeBox(
 		OutDrawElements,
 		++LayerId,
-		AllottedGeometry.ToPaintGeometry(ConvertWorldToLocalLocation(PlayerPosition.Get()), PlayerBrush.ImageSize),
-		&PlayerBrush
+		AllottedGeometry.ToPaintGeometry(ConvertWorldToLocalLocation(PlayerPosition.Get()), MiniMapStyle->PlayerBrush.ImageSize),
+		&MiniMapStyle->PlayerBrush
 	);
 
 	return 0;

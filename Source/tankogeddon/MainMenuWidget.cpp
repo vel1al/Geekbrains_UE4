@@ -6,8 +6,59 @@
 #include "Components/VerticalBox.h"
 #include "Components/WidgetSwitcher.h"
 #include "Components/CanvasPanel.h"
+#include "Components/Image.h"
 #include "Animation/WidgetAnimation.h"
 
+#include "StylesSet.h"
+
+
+FMainMenuStyle UMainMenuWidget::GetMainMenuStyle(ETheme theme){
+    FMainMenuStyle ReturnValue;
+    
+    switch(theme){
+        case ETheme::Bright:    ReturnValue = FStyleSet::Get().GetWidgetStyle<FMainMenuStyle>("Bright_MainMenuStyle");
+        break;
+        case ETheme::Dark:      ReturnValue = FStyleSet::Get().GetWidgetStyle<FMainMenuStyle>("Dark_MainMenuStyle");
+        break;
+        default:                ReturnValue = FStyleSet::Get().GetWidgetStyle<FMainMenuStyle>("Default_MainMenuStyle");
+        break;
+    }
+
+    return ReturnValue;
+}
+
+void UMainMenuWidget::NativePreConstruct(){
+    const FMainMenuStyle Style = GetMainMenuStyle(WidgetTheme);
+
+    if(GameIcon)
+        GameIcon->Brush = Style.GameIcon;
+
+    if(NewGame_btn)
+        NewGame_btn->WidgetStyle = Style.MainButtonsStyle;
+    if(LoadGame_btn)
+        LoadGame_btn->WidgetStyle = Style.MainButtonsStyle;
+    if(QuitPlayGame_btn)
+        QuitPlayGame_btn->WidgetStyle = Style.MainButtonsStyle;
+    if(Play_btn)
+        Play_btn->WidgetStyle = Style.MainButtonsStyle;
+    if(Settings_btn)
+        Settings_btn->WidgetStyle = Style.MainButtonsStyle;
+    if(QuitGame_btn)
+        QuitGame_btn->WidgetStyle = Style.MainButtonsStyle;
+
+    if(QuitSettings_btn)
+        QuitSettings_btn->WidgetStyle = Style.SettingsButtonsStyle;
+    if(Quit_btn)
+        Quit_btn->WidgetStyle = Style.SettingsButtonsStyle;
+    if(Audio_btn)
+        Audio_btn->WidgetStyle = Style.SettingsButtonsStyle;
+    if(Video_btn)
+        Video_btn->WidgetStyle = Style.SettingsButtonsStyle;
+    if(Graphics_btn)
+        Graphics_btn->WidgetStyle = Style.SettingsButtonsStyle;
+    if(Apply_btn)
+        Apply_btn->WidgetStyle = Style.SettingsButtonsStyle;
+}
 
 void UMainMenuWidget::NativeConstruct() {
     Super::NativeConstruct();

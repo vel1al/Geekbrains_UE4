@@ -8,7 +8,6 @@
 #include "GameStructs.h"
 
 
-//idk what do with garbagecollector
 void ATankHUD::SetActivePauseMenu(bool bActive) {
     if(AllocatedWidgets.Find(EWidget::Pause)){
         UUserWidget* buffer = *AllocatedWidgets.Find(EWidget::Pause);

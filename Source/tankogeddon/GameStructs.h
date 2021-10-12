@@ -21,6 +21,13 @@ enum class EWidget : uint8 {
 	GameOver
 };
 
+UENUM()
+enum class ETheme : uint8 {
+    None,
+    Bright,
+    Dark
+};
+
 USTRUCT(BlueprintType)
 struct FDamageData{
     GENERATED_BODY()
@@ -70,6 +77,14 @@ struct FPhysicsProjectilePreStartData{
 
     UPROPERTY()
     float CanonDamage;
+};
+
+USTRUCT(BlueprintType)
+struct FFigure{
+	GENERATED_BODY()
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Meta = (MakeEditWidget = true))
+	TArray<FVector2D> Points;
 };
 
 USTRUCT(BlueprintType)

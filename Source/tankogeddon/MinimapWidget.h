@@ -12,6 +12,7 @@
 class UTexture2D;
 class UBorder;
 class SWidget;
+struct FMiniMapStyle;
 
 
 UCLASS()
@@ -28,13 +29,6 @@ class TANKOGEDDON_API UMinimapWidget : public UWidget{
 
 	public:	
 		UMinimapWidget();
-
-		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-		UTexture2D* PlayerSign;
-		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-		UTexture2D* BorderTexture;
-		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-		UTexture2D* OutlineTexture;
 		
 		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 		FVector2D TopLeftCorner;
@@ -52,9 +46,12 @@ class TANKOGEDDON_API UMinimapWidget : public UWidget{
 		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, meta=(EditCondition="bIsCenteringToPlayer", EditConditionHides))
 		float SizeAdjustment;
 		
+		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+		ETheme WidgetTheme;
+
 		virtual void ReleaseSlateResources(bool bReleaseChildren) override;
 		virtual void SynchronizeProperties() override;
-
+		
 		UFUNCTION()
 		FVector2D GetPlayerLocation();
 		UFUNCTION()
@@ -64,6 +61,10 @@ class TANKOGEDDON_API UMinimapWidget : public UWidget{
 
 	protected:
     	virtual TSharedRef<SWidget> RebuildWidget() override;
+
+		FMiniMapStyle GetMiniMapStyle(ETheme theme);
+
+		FMiniMapStyle MiniMapStyle;
 
     	TSharedPtr<SMiniMapWidget> AllocatedMiniMap;
 };
