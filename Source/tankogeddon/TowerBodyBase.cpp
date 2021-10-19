@@ -18,9 +18,10 @@ ATowerBodyBase::ATowerBodyBase(){
     RootComponent = sceeneCpm;
 
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TowerBody"));
+	BodyMesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	HitBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HitBox"));
-	HitBox->SetupAttachment(RootComponent);
+	HitBox->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	TurretSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("TurretSetupPoint"));
 	TurretSetupPoint->AttachToComponent(BodyMesh, FAttachmentTransformRules::KeepRelativeTransform);

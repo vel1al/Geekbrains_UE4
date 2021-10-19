@@ -20,8 +20,15 @@ void ATankPlayerController::SetupInputComponent(){
     InputComponent->BindAction("FireMain", IE_Pressed, this, &ATankPlayerController::FireMain);
     InputComponent->BindAction("FireSecond", IE_Pressed, this, &ATankPlayerController::FireSecond);
 
+    InputComponent->BindKey(EKeys::LeftMouseButton, IE_Released, this, &ATankPlayerController::OnMouseButtonUpFunc);
+
     InputComponent->BindAction("ChangeTurret", IE_Pressed, this, &ATankPlayerController::ChangeTurret);
     InputComponent->BindAxis("RotateTurretZAxis");
+}
+
+void ATankPlayerController::OnMouseButtonUpFunc(){
+    if(OnMouseButtonUp.IsBound())
+        OnMouseButtonUp.Broadcast();
 }
 
 void ATankPlayerController::MoveXAxis(const float AxisValue){

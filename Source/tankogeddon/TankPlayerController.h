@@ -12,6 +12,9 @@ class TANKOGEDDON_API ATankPlayerController : public APlayerController{
 	GENERATED_BODY()
 
 	public:
+		DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMouseButtonUp);
+		FOnMouseButtonUp OnMouseButtonUp;
+		
 		ATankPlayerController();
 
 		virtual void BeginPlay() override;
@@ -20,6 +23,9 @@ class TANKOGEDDON_API ATankPlayerController : public APlayerController{
 
 		UFUNCTION(BlueprintPure, Category = "Input")
 		FVector GetMousePos() const;
+
+		UFUNCTION()
+		void OnMouseButtonUpFunc();
 
 	private:
 		void MoveXAxis(float AxisValue);

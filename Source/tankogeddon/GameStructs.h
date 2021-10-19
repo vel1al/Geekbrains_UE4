@@ -3,6 +3,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/UserDefinedStruct.h"
+//#include "EquipmentStats.h"
+#include "Engine/DataTable.h"
 #include "GameStructs.generated.h"
 
 
@@ -81,4 +83,37 @@ struct FObstacle{
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	TArray<FLinearColor> Color;
+};
+
+// USTRUCT(BlueprintType)
+// struct FHelpersEquipmentStats{
+//     GENERATED_BODY()
+
+//     UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+//     float ShootingSpeed;
+//     UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+//     float ShootingRatio;
+//     UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+//     float ShootingDamage;
+
+//     UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+//     float MaxHealth;
+//     UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+//     float MaxArrmor;
+//     UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+//     float MoivingSpeed;
+// };
+
+USTRUCT(BlueprintType)
+struct FTurretInformation : public FTableRowBase{
+	GENERATED_BODY()
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FText MainDescription;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FSlateBrush Thumbnail;
+
+    // UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	// FHelpersEquipmentStats EquipmentStats;
 };
