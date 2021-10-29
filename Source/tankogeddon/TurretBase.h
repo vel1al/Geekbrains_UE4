@@ -18,9 +18,9 @@ class TANKOGEDDON_API ATurretBase : public AActor{
 		void RestoreAmmo();
 
 		UFUNCTION(BlueprintCallable, Category = "Fire")
-		virtual void FireMain();
+		virtual void FireMain(const float AdditionDamage);
 		UFUNCTION(BlueprintCallable, Category = "Fire")
-		virtual void FireSecond();
+		virtual void FireSecond(const float AdditionDamage);
 
 		UFUNCTION(BlueprintCallable, Category = "Movement|Turret")
 		FVector GetTurretMeshDirection() const;

@@ -7,6 +7,8 @@
 #include <Components/AudioComponent.h>
 #include <Components/BoxComponent.h>
 #include <Particles/ParticleSystemComponent.h>
+#include "InventoryComponent.h"
+#include "PlayerInventoryInteraction.h"
 
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -15,7 +17,6 @@
 
 #include "TankTurret.h"
 #include "Gamestructs.h"
-
 
 
 ATankPawn::ATankPawn(){
@@ -44,6 +45,9 @@ ATankPawn::ATankPawn(){
 	PlayerHitAudioEffect = CreateDefaultSubobject<UAudioComponent>("PlayerHitAudioEffect");
 	PlayerHitAudioEffect->SetupAttachment(RootComponent);
 
+	PlayerInventoryInteractionComponent = CreateDefaultSubobject<UPlayerInventoryInteraction>(TEXT("PlayerInteractionComponent"));
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+	
 	PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -115,6 +119,8 @@ void ATankPawn::BeginPlay(){
 
 	SetUpTurret(DefaultTurretClass);
 	TurretSlots[CurrentTurretSlot]->SetActive(true);
+
+	PlayerInventoryInteractionComponent->Init(InventoryComponent, TankName);
 }
 
 void ATankPawn::EndPlay(EEndPlayReason::Type Reason){
@@ -221,7 +227,7 @@ FVector ATankPawn::GetLookFromPosition() const {
 		return TurretSlots[CurrentTurretSlot]->GetActorLocation();
 	
 	return FVector(0.f);
-}
+} 
 
 void ATankPawn::RotateTurretToStart(){
 	bIsRequringRotateToStart = true;
@@ -231,9 +237,9 @@ void ATankPawn::RotateTurretToStart(){
 
 void ATankPawn::FireMain(){
 	if(TurretSlots[CurrentTurretSlot])
-		TurretSlots[CurrentTurretSlot]->FireMain();
+		TurretSlots[CurrentTurretSlot]->FireMain(CurrentStats.SelfPower);
 }
 void ATankPawn::FireSecond(){
 	if(TurretSlots[CurrentTurretSlot])
-		TurretSlots[CurrentTurretSlot]->FireSecond();
+		TurretSlots[CurrentTurretSlot]->FireSecond(CurrentStats.SelfPower);
 }

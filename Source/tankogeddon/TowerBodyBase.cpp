@@ -65,7 +65,7 @@ bool ATowerBodyBase::CheckRange(){
 
 void ATowerBodyBase::Fire(){
 	if(BaseTurret)
-		BaseTurret->FireMain();
+		BaseTurret->FireMain(CurrentStats.SelfPower);
 }
 
 FVector ATowerBodyBase::GetTurretDirection() const {

@@ -37,7 +37,7 @@ void ATankHUD::BeginPlay() {
     AllocatedWidgets.Add(EWidget::HUD, HUD);
     AllocatedWidgets.Add(EWidget::GameOver, GameOver);
 
-    GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::HUD);
+    //GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::HUD);
 
     if (GetWorld()){
         APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();

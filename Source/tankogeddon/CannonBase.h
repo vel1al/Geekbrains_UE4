@@ -55,9 +55,9 @@ class TANKOGEDDON_API ACanonBase : public AActor{
 		int SecondShotsCount = 4;
 
 		UFUNCTION(BlueprintCallable, Category = "Fire")
-		virtual void FireMain();
+		virtual void FireMain(const float AdditionDamage);
 		UFUNCTION(BlueprintCallable, Category = "Fire")
-		virtual void FireSecond();
+		virtual void FireSecond(const float AdditionDamage);
 		UFUNCTION(BlueprintPure, Category = "Fire")
 		bool IsReadyToFire() const;
 
@@ -84,6 +84,8 @@ class TANKOGEDDON_API ACanonBase : public AActor{
 		int CurrentAmmoCount;	
 		int CurrentAmmunitionCount;
 
+		float AdditionDamage;
+	
 		FTimerHandle ReloadTimerHandle;
 		FTimerHandle CooldownTimerHandle;
 		FTimerHandle SecondIntervalTimerHandle;

@@ -73,14 +73,14 @@ void ATurretBase::SetCannonRotation(const FRotator value){
 		BaseCannon->SetActorRotation(value);
 }
 
-void ATurretBase::FireMain(){
+void ATurretBase::FireMain(const float AdditionDamage){
 	if(BaseCannon)
-		BaseCannon->FireMain();
+		BaseCannon->FireMain(AdditionDamage);
 }
 
-void ATurretBase::FireSecond(){
+void ATurretBase::FireSecond(const float AdditionDamage){
 	if(BaseCannon)
-		BaseCannon->FireSecond();
+		BaseCannon->FireSecond(AdditionDamage);
 }
 
 void ATurretBase::RestoreAmmo(){

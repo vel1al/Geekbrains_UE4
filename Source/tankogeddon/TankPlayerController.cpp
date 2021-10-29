@@ -1,4 +1,5 @@
 #include "TankPlayerController.h"
+#include "PlayerInventoryInteraction.h"
 #include "TankPawn.h"
 
 ATankPlayerController::ATankPlayerController(){
@@ -22,6 +23,9 @@ void ATankPlayerController::SetupInputComponent(){
 
     InputComponent->BindKey(EKeys::LeftMouseButton, IE_Released, this, &ATankPlayerController::OnMouseButtonUpFunc);
 
+    InputComponent->BindKey(EKeys::LeftShift, IE_Pressed, this, &ATankPlayerController::OnLeftShiftPressed);
+    InputComponent->BindKey(EKeys::LeftShift, IE_Released, this, &ATankPlayerController::OnLeftShiftReleased);
+    
     InputComponent->BindAction("ChangeTurret", IE_Pressed, this, &ATankPlayerController::ChangeTurret);
     InputComponent->BindAxis("RotateTurretZAxis");
 }
@@ -31,34 +35,38 @@ void ATankPlayerController::OnMouseButtonUpFunc(){
         OnMouseButtonUp.Broadcast();
 }
 
+void ATankPlayerController::OnLeftShiftPressed(){
+    if(OnLeftShift.IsBound())
+        OnLeftShift.Broadcast(true);
+}
+
+void ATankPlayerController::OnLeftShiftReleased() {
+    if(OnLeftShift.IsBound())
+        OnLeftShift.Broadcast(false);
+}
+
 void ATankPlayerController::MoveXAxis(const float AxisValue){
-    if (TankPawn){
+    if (TankPawn)
         TankPawn->SetMoveTorqueXAxis(AxisValue);
-    }
 }
 void ATankPlayerController::RotateZAxis(const float AxisValue){
-    if (TankPawn){
+    if (TankPawn)
         TankPawn->SetRotateTorqueZAxis(AxisValue);
-    }
 }
 
 void ATankPlayerController::FireMain(){
-    if (TankPawn){
+    if (TankPawn)
         TankPawn->FireMain();
-    }
 }
 
 void ATankPlayerController::FireSecond(){
-    if (TankPawn){
+    if (TankPawn)
         TankPawn->FireSecond();
-    }
 }
 
 void ATankPlayerController::ChangeTurret(){
-    if(TankPawn){
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Changed"));
+    if(TankPawn)
         TankPawn->ChangeTurret();
-    }
 }
 
 FVector ATankPlayerController::GetMousePos() const{
@@ -76,6 +84,7 @@ void ATankPlayerController::Tick(float DeltaSeconds){
         DeprojectMousePositionToWorld(MousePosition, MouseDirection);
 
         float TurretRotationZAxis = GetInputAxisValue("RotateTurretZAxis");
+        
         if(FMath::IsNearlyZero(TurretRotationZAxis) && (MousePosition != PreviousMousePosition || bIsControllingByMouse)){
             bIsControllingByMouse = true;
 
@@ -96,6 +105,7 @@ void ATankPlayerController::Tick(float DeltaSeconds){
             if (SignedAngle <= -180) SignedAngle += 360;
 
             float TurretRotationTorque = 0;
+            
             if(FMath::Abs(SignedAngle) > 5){
                 if(SignedAngle > 0)
                     TurretRotationTorque = 1;

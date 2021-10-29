@@ -16,30 +16,32 @@ ADamageTaker::ADamageTaker(){
 
     HPBarWidget = Cast<UHPBarWidget>(HPBar->GetUserWidgetObject());
 
-	CurrentHealth = MaxHealth;
+	//CurrentHealth = MaxHealth;
+    CurrentStats = DefaultStats;
 }
 
 void ADamageTaker::BeginPlay(){
     if(HPBarWidget)
-        HPBarWidget->SetHP(MaxHealth/MaxHealth);
+        HPBarWidget->SetHP(1);
 }
 
 bool ADamageTaker::CauseDamage(FDamageData DamageData){
     if(IsDestroyed())
         return false;
     
-    float TakenDamageValue = DamageData.DamageValue;
+    float RecivedDamageValue = DamageData.DamageValue * (CurrentStats.Armor / (CurrentStats.Armor + 30.f));
     bool bWasDestroyed = false;
 
-	CurrentHealth -= TakenDamageValue;
-    if (CurrentHealth <= 0){
+	CurrentStats.Health -= RecivedDamageValue;
+    CurrentStats.Armor -= DamageData.DamageValue;
+    if (CurrentStats.Health <= 0){
         bWasDestroyed = true;
         
         if(HPBarWidget)
             HPBarWidget->SetHP(0);
     }
     else if(HPBarWidget)
-        HPBarWidget->SetHP(CurrentHealth/MaxHealth);
+        HPBarWidget->SetHP(CurrentStats.Health/DefaultStats.Health);
 
 	bIsDestroyed = bWasDestroyed;
 	if(bIsDestroyed)
@@ -52,22 +54,37 @@ bool ADamageTaker::IsDestroyed() const {
 	return bIsDestroyed;
 }
 
-float ADamageTaker::GetHealth() const{
-    return CurrentHealth;
+void ADamageTaker::ModifyStats(const FVehicleStats& AdditionalValue) {
+    CurrentStats.Health += AdditionalValue.Health;
+    CurrentStats.Armor += AdditionalValue.Armor;
+    CurrentStats.SelfPower += AdditionalValue.SelfPower;
+    CurrentStats.EquipmentWeight += AdditionalValue.EquipmentWeight;
 }
 
-float ADamageTaker::GetHealthState() const{
-    return CurrentHealth / MaxHealth;
+void ADamageTaker::SetStats(const FVehicleStats& SetValue) {
+    CurrentStats = SetValue;
 }
 
-void ADamageTaker::AddHealth(const float AddiditionalHealthValue){
-    CurrentHealth += AddiditionalHealthValue;
-
-    if (CurrentHealth > MaxHealth)
-        CurrentHealth = MaxHealth;
-    if(HPBarWidget)
-        HPBarWidget->SetHP(CurrentHealth/MaxHealth);    
+FVehicleStats ADamageTaker::GetStats() const {
+    return CurrentStats;
 }
+
+// float ADamageTaker::GetHealth() const{
+//     return CurrentHealth;
+// }
+//
+// float ADamageTaker::GetHealthState() const{
+//     return CurrentHealth / MaxHealth;
+// }
+//
+// void ADamageTaker::AddHealth(const float AddiditionalHealthValue){
+//     CurrentHealth += AddiditionalHealthValue;
+//
+//     if (CurrentHealth > MaxHealth)
+//         CurrentHealth = MaxHealth;
+//     if(HPBarWidget)
+//         HPBarWidget->SetHP(CurrentHealth/MaxHealth);    
+// }
 
 void ADamageTaker::OnDieEvent() {
     UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), DestroyedEffect, GetActorTransform());

@@ -6,6 +6,9 @@
 #include "TankPawn.generated.h"
 
 
+class ATankTurret;
+
+
 UCLASS()
 class TANKOGEDDON_API ATankPawn : public APlayerVechicle{
 		GENERATED_BODY()
@@ -45,6 +48,9 @@ class TANKOGEDDON_API ATankPawn : public APlayerVechicle{
 		UFUNCTION(BlueprintCallable, Category = "Turret")
 		FVector GetLookFromPosition() const;
 
+		// UFUNCTION()
+		// class UPlayerInventoryInteraction* GetPlayerInventoryInteractionComponent() const;
+	
 		UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly, Category = "Components")
 		class UStaticMeshComponent* BodyMesh;
 		UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly, Category = "Components")
@@ -57,10 +63,17 @@ class TANKOGEDDON_API ATankPawn : public APlayerVechicle{
 		class UArrowComponent* TurretSetupPoint;
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
     	class UAudioComponent* PlayerHitAudioEffect;
+		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Components")
+		class UInventoryComponent* InventoryComponent;
+		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Components")
+		class UPlayerInventoryInteraction* PlayerInventoryInteractionComponent;
 		
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 		TSubclassOf<class ATankTurret> DefaultTurretClass;
 
+		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		FName TankName;
+	
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tank|Movement|AI", meta = (MakeEditWidget = true))
 		TArray<FVector> LocalPatrollingPoints;
 
@@ -77,7 +90,7 @@ class TANKOGEDDON_API ATankPawn : public APlayerVechicle{
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Tank|AI|Movement")
 		float TankMovementAccurancy = 5;
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Tank|AI|Movement")
-		float TankTargettingAccurancy = 5;
+		float TankTargettingAccurancy = 5; 
 
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
 		int TurretSlotsCount = 2;

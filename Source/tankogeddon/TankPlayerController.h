@@ -13,8 +13,11 @@ class TANKOGEDDON_API ATankPlayerController : public APlayerController{
 
 	public:
 		DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnMouseButtonUp);
+		DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShift, bool, bIsPreesed);
+
 		FOnMouseButtonUp OnMouseButtonUp;
-		
+		FOnShift OnLeftShift;
+	
 		ATankPlayerController();
 
 		virtual void BeginPlay() override;
@@ -27,6 +30,11 @@ class TANKOGEDDON_API ATankPlayerController : public APlayerController{
 		UFUNCTION()
 		void OnMouseButtonUpFunc();
 
+		UFUNCTION()
+		void OnLeftShiftPressed();
+		UFUNCTION()
+		void OnLeftShiftReleased();
+	
 	private:
 		void MoveXAxis(float AxisValue);
 		void RotateZAxis(float AxisValue);

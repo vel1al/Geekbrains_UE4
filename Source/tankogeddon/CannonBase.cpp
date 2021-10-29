@@ -133,7 +133,7 @@ void ACanonBase::Fire(){
 			ProjectileData.Location = ProjectileSpawnPoint->GetComponentLocation();
 			ProjectileData.Rotation = ProjectileSpawnPoint->GetComponentRotation();
 			ProjectileData.Instigator = GetInstigator();
-			ProjectileData.CanonDamage = FireDamage;
+			ProjectileData.CanonDamage = FireDamage + AdditionDamage;
 
 			Projectile->SetMoveRange(FireRange);
 			Projectile->SetPrestartData(ProjectileData);
@@ -162,7 +162,7 @@ void ACanonBase::Fire(){
 				if(DamagedActor){
 					FDamageData DamageData;
 
-					DamageData.DamageValue = FireDamage;
+					DamageData.DamageValue = FireDamage + AdditionDamage;
 					DamageData.Instigator = GetInstigator();
 					DamageData.DamageMaker = this;
 
@@ -193,7 +193,9 @@ void ACanonBase::Fire(){
 	}
 }
 
-void ACanonBase::FireMain(){
+void ACanonBase::FireMain(const float AdditionValue){
+	AdditionDamage = AdditionValue;
+
 	if(!bIsReadyToFire){
 		return;
 	}
@@ -210,7 +212,9 @@ void ACanonBase::FireMain(){
 	}
 }
 
-void ACanonBase::FireSecond(){
+void ACanonBase::FireSecond(const float AdditionValue){
+	AdditionDamage = AdditionValue;
+
 	if(!bIsReadyToFire)
 		return;
 	else if(CurrentAmmoCount == 0){
@@ -222,6 +226,7 @@ void ACanonBase::FireSecond(){
 		--CurrentAmmoCount;
 
 		CurrentSecondShot = SecondShotsCount;
+
 		GetWorld()->GetTimerManager().SetTimer(SecondIntervalTimerHandle, this, &ACanonBase::SecondShot, SecondIntervalTime, false);
 		
 		GetWorld()->GetTimerManager().SetTimer(CooldownTimerHandle, this, &ACanonBase::Cooldown, SecondFireCooldownTime, false);
