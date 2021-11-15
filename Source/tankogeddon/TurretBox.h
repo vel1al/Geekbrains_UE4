@@ -17,7 +17,7 @@ class TANKOGEDDON_API ATurretBox : public AActor{
 		class USpotLightComponent* Light;
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Box|Turret")
-		TSubclassOf<class ATankTurret> TurretClass;
+		TSubclassOf<class ATurretBase> TurretClass;
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Box|Movement")
 		float RotationRatio;

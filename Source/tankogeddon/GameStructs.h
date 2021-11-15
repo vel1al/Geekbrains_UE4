@@ -53,18 +53,15 @@ struct FProjectilePreStartData{
 };
 
 USTRUCT(BlueprintType)
-struct FVehicleStats {
+struct FHealthStats {
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	float Health;
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	float Armor;
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	float SelfPower;
-	UPROPERTY()
-	float EquipmentWeight;
 };
+
 USTRUCT(BlueprintType)
 struct FPhysicsProjectilePreStartData{
     GENERATED_BODY()

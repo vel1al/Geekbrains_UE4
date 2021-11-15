@@ -70,7 +70,7 @@ void AMortairTowerBody::BeginPlay(){
 
     PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 
-    check(Turret && PlayerPawn);
+    //check(Turret && PlayerPawn);
 }
 
 void AMortairTowerBody::RotateCannonXAxis(const FVector TargetPoint){

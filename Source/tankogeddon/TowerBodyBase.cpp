@@ -36,7 +36,7 @@ void ATowerBodyBase::BeginPlay(){
 	SetUpTurret(DefaultTurretClass);
     PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 
-    check(BaseTurret && PlayerPawn);
+    //check(BaseTurret && PlayerPawn);
 }
 
 void ATowerBodyBase::EndPlay(EEndPlayReason::Type Reason){
@@ -65,7 +65,7 @@ bool ATowerBodyBase::CheckRange(){
 
 void ATowerBodyBase::Fire(){
 	if(BaseTurret)
-		BaseTurret->FireMain(CurrentStats.SelfPower);
+		BaseTurret->FireMain(0);
 }
 
 FVector ATowerBodyBase::GetTurretDirection() const {

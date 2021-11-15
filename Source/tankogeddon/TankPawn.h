@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerVechicle.h"
+#include "TurretBase.h"
 #include "TankPawn.generated.h"
 
 
@@ -38,7 +39,7 @@ class TANKOGEDDON_API ATankPawn : public APlayerVechicle{
 		void FireSecond();
 
 		UFUNCTION(BlueprintCallable, Category = "Turret")
-		void SetUpTurret(TSubclassOf<ATankTurret> NewTurretClass);
+		void SetUpTurret(TSubclassOf<ATurretBase> NewTurretClass);
 		UFUNCTION(BlueprintCallable, Category = "Turret")
 		void SetUpCannon(TSubclassOf<class ACanonBase> NewCannonClass);
 		UFUNCTION(BlueprintCallable, Category = "Turret")
@@ -69,7 +70,7 @@ class TANKOGEDDON_API ATankPawn : public APlayerVechicle{
 		class UPlayerInventoryInteraction* PlayerInventoryInteractionComponent;
 		
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret")
-		TSubclassOf<class ATankTurret> DefaultTurretClass;
+		TSubclassOf<class ATurretBase> DefaultTurretClass;
 
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		FName TankName;
@@ -102,11 +103,11 @@ class TANKOGEDDON_API ATankPawn : public APlayerVechicle{
 
 	private:
 		UPROPERTY()
-		ATankTurret* TankTurret;
+		ATurretBase* TankTurret;
 		UPROPERTY()
-		TArray<ATankTurret*> TurretSlots;
+		TArray<ATurretBase*> TurretSlots;
 
-		ATankTurret* GetCurrentActiveTurret();
+		ATurretBase* GetCurrentActiveTurret();
 
 		int CurrentTurretSlot = 0;
 		int AllocatedTurretSlotsCount = 0;

@@ -30,7 +30,7 @@ class TANKOGEDDON_API ADamageTaker : public APawn{
 		// float MaxArmor = 10;
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "VehicleStats")
-		FVehicleStats DefaultStats;
+		FHealthStats DefaultStats;
 	
 		bool CauseDamage(FDamageData DamageData);
 		bool IsDestroyed() const;
@@ -43,10 +43,10 @@ class TANKOGEDDON_API ADamageTaker : public APawn{
 		// void AddHealth(float AdditionalHealthValue);
 		// void AddArmor(const float AdditionalArmorValue);
 
-		void ModifyStats(const FVehicleStats& AdditionalValue);
-		void SetStats(const FVehicleStats& SetValue);
+		void ModifyStats(const FHealthStats& AdditionalValue);
+		void SetStats(const FHealthStats& SetValue);
 	
-		FVehicleStats GetStats() const;
+		FHealthStats GetStats() const;
 	
 	protected:
 		UHPBarWidget* HPBarWidget;
@@ -57,7 +57,7 @@ class TANKOGEDDON_API ADamageTaker : public APawn{
 		// float CurrentHealth;
 		// float CurrentArmor;
 
-		FVehicleStats CurrentStats;
+		FHealthStats CurrentStats;
 	
 		bool bIsDestroyed;
 };

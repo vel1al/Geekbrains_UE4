@@ -43,12 +43,18 @@ class TANKOGEDDON_API ATankPlayerController : public APlayerController{
 		void FireSecond();
 		void ChangeTurret();
 
+		void Interaction();
+	
+		void OpenInvetory();
+		void CloseInvetory();
+	
 	private:
 		UPROPERTY()
-		class ATankPawn* TankPawn;
+		class APlayerVehicle* PlayerVehicle;
 
 		FVector CachedMousePosition;
 		FVector PreviousMousePosition;
 
 		bool bIsControllingByMouse;
+		bool bIsIventoryOpened;
 };

@@ -54,18 +54,16 @@ bool ADamageTaker::IsDestroyed() const {
 	return bIsDestroyed;
 }
 
-void ADamageTaker::ModifyStats(const FVehicleStats& AdditionalValue) {
+void ADamageTaker::ModifyStats(const FHealthStats& AdditionalValue) {
     CurrentStats.Health += AdditionalValue.Health;
     CurrentStats.Armor += AdditionalValue.Armor;
-    CurrentStats.SelfPower += AdditionalValue.SelfPower;
-    CurrentStats.EquipmentWeight += AdditionalValue.EquipmentWeight;
 }
 
-void ADamageTaker::SetStats(const FVehicleStats& SetValue) {
+void ADamageTaker::SetStats(const FHealthStats& SetValue) {
     CurrentStats = SetValue;
 }
 
-FVehicleStats ADamageTaker::GetStats() const {
+FHealthStats ADamageTaker::GetStats() const {
     return CurrentStats;
 }
 

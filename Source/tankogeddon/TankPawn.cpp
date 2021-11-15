@@ -15,7 +15,7 @@
 
 #include "DrawDebugHelpers.h"
 
-#include "TankTurret.h"
+#include "TurretBase.h"
 #include "Gamestructs.h"
 
 
@@ -64,14 +64,14 @@ void ATankPawn::SetUpCannon(TSubclassOf<ACanonBase> NewCannonClass){
 		TurretSlots[CurrentTurretSlot]->SetUpCannon(NewCannonClass);
 }
 
-void ATankPawn::SetUpTurret(TSubclassOf<ATankTurret> NewTurretClass){
+void ATankPawn::SetUpTurret(TSubclassOf<ATurretBase> NewTurretClass){
 	FActorSpawnParameters Params;
     Params.Instigator = this;
     Params.Owner = this;
     Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	if(AllocatedTurretSlotsCount != TurretSlotsCount){
-		TurretSlots[AllocatedTurretSlotsCount] = GetWorld()->SpawnActor<ATankTurret>(NewTurretClass, Params);
+		TurretSlots[AllocatedTurretSlotsCount] = GetWorld()->SpawnActor<ATurretBase>(NewTurretClass, Params);
 		TurretSlots[AllocatedTurretSlotsCount]->AttachToComponent(TurretSetupPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 		TurretSlots[AllocatedTurretSlotsCount]->SetActive(false);
 
@@ -85,14 +85,14 @@ void ATankPawn::SetUpTurret(TSubclassOf<ATankTurret> NewTurretClass){
 
 		InvalidateTurret(CurrentTurretSlot);
 
-		TurretSlots[CurrentTurretSlot] = GetWorld()->SpawnActor<ATankTurret>(NewTurretClass, Params);
+		TurretSlots[CurrentTurretSlot] = GetWorld()->SpawnActor<ATurretBase>(NewTurretClass, Params);
 		TurretSlots[CurrentTurretSlot]->AttachToComponent(TurretSetupPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 		TurretSlots[CurrentTurretSlot]->SetActive(true);
 	}
 }
  
 void ATankPawn::ChangeTurret(){
-	ATankTurret* CurrentActiveTurret = GetCurrentActiveTurret();
+	ATurretBase* CurrentActiveTurret = GetCurrentActiveTurret();
 	
 	if(!(TurretSlots.IsValidIndex(++CurrentTurretSlot)))
 		CurrentTurretSlot = 0;
@@ -105,7 +105,7 @@ void ATankPawn::ChangeTurret(){
 	}
 }
 
-ATankTurret* ATankPawn::GetCurrentActiveTurret(){
+ATurretBase* ATankPawn::GetCurrentActiveTurret(){
 	if(TurretSlots[CurrentTurretSlot])
 		return TurretSlots[CurrentTurretSlot];
 
@@ -115,12 +115,12 @@ ATankTurret* ATankPawn::GetCurrentActiveTurret(){
 void ATankPawn::BeginPlay(){
 	Super::BeginPlay();
 	
-	TurretSlots.SetNumZeroed(TurretSlotsCount);
+	//TurretSlots.SetNumZeroed(TurretSlotsCount);
 
-	SetUpTurret(DefaultTurretClass);
-	TurretSlots[CurrentTurretSlot]->SetActive(true);
+	//SetUpTurret(DefaultTurretClass);
+	//TurretSlots[CurrentTurretSlot]->SetActive(true);
 
-	PlayerInventoryInteractionComponent->Init(InventoryComponent, TankName);
+	//PlayerInventoryInteractionComponent->Init(InventoryComponent, TankName);
 }
 
 void ATankPawn::EndPlay(EEndPlayReason::Type Reason){
@@ -187,10 +187,10 @@ void ATankPawn::RotateTurretZAxis(const float DeltaTime){
 void ATankPawn::Tick(const float DeltaTime){
 	Super::Tick(DeltaTime);
 
-	MoveTankXAxis(DeltaTime);
-	RotateTankZAxis(DeltaTime);
+	//MoveTankXAxis(DeltaTime);
+	//RotateTankZAxis(DeltaTime);
 
-	RotateTurretZAxis(DeltaTime);
+	//RotateTurretZAxis(DeltaTime);
 }
 
 float ATankPawn::GetMoveTorqueXAxis() const{
@@ -237,9 +237,9 @@ void ATankPawn::RotateTurretToStart(){
 
 void ATankPawn::FireMain(){
 	if(TurretSlots[CurrentTurretSlot])
-		TurretSlots[CurrentTurretSlot]->FireMain(CurrentStats.SelfPower);
+		TurretSlots[CurrentTurretSlot]->FireMain(0);
 }
 void ATankPawn::FireSecond(){
 	if(TurretSlots[CurrentTurretSlot])
-		TurretSlots[CurrentTurretSlot]->FireSecond(CurrentStats.SelfPower);
+		TurretSlots[CurrentTurretSlot]->FireSecond(0);
 }

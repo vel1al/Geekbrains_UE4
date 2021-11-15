@@ -6,16 +6,11 @@
 
 
 UINTERFACE(MinimalAPI)
-class UILevelChanger : public UInterface
-{
+class UILevelChanger : public UInterface{
 	GENERATED_BODY()
 };
 
-/**
- * 
- */
-class TANKOGEDDON_API IILevelChanger
-{
+class TANKOGEDDON_API IILevelChanger{
 	GENERATED_BODY()
 
 	public:

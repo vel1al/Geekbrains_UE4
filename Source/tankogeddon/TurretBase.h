@@ -27,12 +27,12 @@ class TANKOGEDDON_API ATurretBase : public AActor{
 		UFUNCTION(BlueprintCallable, Category = "Movement|Turret")
 		FRotator GetTurretMeshRotation() const;
 		UFUNCTION(BlueprintCallable, Category = "Movement|Turret")
-		void SetTurretMeshRotation(const FRotator value);
+		void SetTurretMeshRotation(const FRotator Value);
 
 		UFUNCTION(BlueprintCallable, Category = "Movement|Cannon")
 		ACanonBase* GetCannon() const;
 		UFUNCTION(BlueprintCallable, Category = "Movement|Cannon")
-		void SetCannonRotation(const FRotator value);
+		void SetCannonRotation(const FRotator Value);
 
 		UPROPERTY(BlueprintReadWrite, VisibleDefaultsOnly, Category = "Components")
 		class UStaticMeshComponent* TurretMesh;
@@ -42,6 +42,8 @@ class TANKOGEDDON_API ATurretBase : public AActor{
 		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Cannon")
 		TSubclassOf<class ACanonBase> DefaultCannonClass;
 
+		void SetActive(bool bIsActive);
+	
 	protected:
 		virtual void BeginPlay() override;
 		virtual void EndPlay(EEndPlayReason::Type Reason) override;

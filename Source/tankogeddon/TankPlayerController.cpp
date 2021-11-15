@@ -1,6 +1,8 @@
 #include "TankPlayerController.h"
 #include "PlayerInventoryInteraction.h"
-#include "TankPawn.h"
+#include "PlayerVehicle.h"
+#include "TurretBase.h"
+
 
 ATankPlayerController::ATankPlayerController(){
     bShowMouseCursor = true;
@@ -9,7 +11,7 @@ ATankPlayerController::ATankPlayerController(){
 void ATankPlayerController::BeginPlay(){
     Super::BeginPlay();
 
-    TankPawn = Cast<ATankPawn>(GetPawn());
+    PlayerVehicle = Cast<APlayerVehicle>(GetPawn());
 }
 
 void ATankPlayerController::SetupInputComponent(){
@@ -21,6 +23,10 @@ void ATankPlayerController::SetupInputComponent(){
     InputComponent->BindAction("FireMain", IE_Pressed, this, &ATankPlayerController::FireMain);
     InputComponent->BindAction("FireSecond", IE_Pressed, this, &ATankPlayerController::FireSecond);
 
+    InputComponent->BindAction("Interaction", IE_Pressed, this, &ATankPlayerController::Interaction);
+    InputComponent->BindAction("OpenInventory", IE_Pressed, this, &ATankPlayerController::OpenInvetory);
+    InputComponent->BindAction("CloseInventory", IE_Pressed, this, &ATankPlayerController::CloseInvetory);
+    
     InputComponent->BindKey(EKeys::LeftMouseButton, IE_Released, this, &ATankPlayerController::OnMouseButtonUpFunc);
 
     InputComponent->BindKey(EKeys::LeftShift, IE_Pressed, this, &ATankPlayerController::OnLeftShiftPressed);
@@ -46,27 +52,41 @@ void ATankPlayerController::OnLeftShiftReleased() {
 }
 
 void ATankPlayerController::MoveXAxis(const float AxisValue){
-    if (TankPawn)
-        TankPawn->SetMoveTorqueXAxis(AxisValue);
+    if (PlayerVehicle)
+        PlayerVehicle->SetBodyMoveTorque(AxisValue);
 }
 void ATankPlayerController::RotateZAxis(const float AxisValue){
-    if (TankPawn)
-        TankPawn->SetRotateTorqueZAxis(AxisValue);
+    if (PlayerVehicle)
+        PlayerVehicle->SetBodyRotationTorque(AxisValue);
 }
 
 void ATankPlayerController::FireMain(){
-    if (TankPawn)
-        TankPawn->FireMain();
+    if (PlayerVehicle)
+        PlayerVehicle->FireMain();
 }
 
 void ATankPlayerController::FireSecond(){
-    if (TankPawn)
-        TankPawn->FireSecond();
+    if (PlayerVehicle)
+        PlayerVehicle->FireSecond();
 }
 
 void ATankPlayerController::ChangeTurret(){
-    if(TankPawn)
-        TankPawn->ChangeTurret();
+    if(PlayerVehicle) 
+        PlayerVehicle->ChangeTurret();
+}
+
+void ATankPlayerController::Interaction() {
+    if(PlayerVehicle)
+        PlayerVehicle->Interact();
+}
+
+void ATankPlayerController::OpenInvetory() {
+    if(PlayerVehicle)
+        PlayerVehicle->ToggleInventory(true);
+}
+void ATankPlayerController::CloseInvetory() {
+    if(PlayerVehicle)
+        PlayerVehicle->ToggleInventory(false);
 }
 
 FVector ATankPlayerController::GetMousePos() const{
@@ -77,7 +97,7 @@ void ATankPlayerController::Tick(float DeltaSeconds){
     Super::Tick(DeltaSeconds);
 
 
-    if (TankPawn){
+    if (PlayerVehicle){
         bShowMouseCursor = bIsControllingByMouse;
 
         FVector MousePosition, MouseDirection;
@@ -88,8 +108,11 @@ void ATankPlayerController::Tick(float DeltaSeconds){
         if(FMath::IsNearlyZero(TurretRotationZAxis) && (MousePosition != PreviousMousePosition || bIsControllingByMouse)){
             bIsControllingByMouse = true;
 
-            FVector TankPosition = TankPawn->GetActorLocation();
-            FVector TankTurretDirection = TankPawn->GetTurretDirection();
+            FVector TankPosition = PlayerVehicle->GetActorLocation();
+
+            FVector TankTurretDirection = FVector(0.f);
+            if(PlayerVehicle->GetTurret())
+                TankTurretDirection = PlayerVehicle->GetTurret()->GetTurretMeshDirection();
 
             CachedMousePosition = MousePosition - TankPosition;
             CachedMousePosition.Z = 0;
@@ -113,10 +136,10 @@ void ATankPlayerController::Tick(float DeltaSeconds){
                     TurretRotationTorque = -1;
             }
 
-            TankPawn->SetRotateTurretTorqueZAxis(TurretRotationTorque);
+            PlayerVehicle->SetTurretRotationTorque(TurretRotationTorque);
         } 
         else{
-            TankPawn->SetRotateTurretTorqueZAxis(TurretRotationZAxis);
+            PlayerVehicle->SetTurretRotationTorque(TurretRotationZAxis);
 
             bIsControllingByMouse = false;
         }

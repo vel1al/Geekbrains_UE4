@@ -1,0 +1,5 @@
+C:\tankogeddon\Plugins\TargetingPlugin\Intermediate\Build\Win64\UE4Editor\Development\TargetingPlugin\Definitions.TargetingPlugin.h
+C:/tankogeddon/Plugins/TargetingPlugin/Source/TargetingPlugin/Private/TargetingMath.cpp
+C:\tankogeddon\Plugins\TargetingPlugin\Source\TargetingPlugin\Public\TargetingMath.h
+C:/tankogeddon/Plugins/TargetingPlugin/Source/TargetingPlugin/Private/TargetingPlugin.cpp
+C:\tankogeddon\Plugins\TargetingPlugin\Source\TargetingPlugin\Public\TargetingPlugin.h

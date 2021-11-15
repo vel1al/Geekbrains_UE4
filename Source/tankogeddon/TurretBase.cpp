@@ -57,8 +57,8 @@ FVector ATurretBase::GetTurretMeshDirection() const {
 	return TurretMesh->GetForwardVector();
 }
 
-void ATurretBase::SetTurretMeshRotation(const FRotator value){
-	TurretMesh->SetWorldRotation(value);
+void ATurretBase::SetTurretMeshRotation(const FRotator Value){
+	TurretMesh->SetWorldRotation(Value);
 }
 
 ACanonBase* ATurretBase::GetCannon() const {
@@ -68,9 +68,9 @@ ACanonBase* ATurretBase::GetCannon() const {
 	return nullptr;
 }
 
-void ATurretBase::SetCannonRotation(const FRotator value){
+void ATurretBase::SetCannonRotation(const FRotator Value){
 	if(BaseCannon)
-		BaseCannon->SetActorRotation(value);
+		BaseCannon->SetActorRotation(Value);
 }
 
 void ATurretBase::FireMain(const float AdditionDamage){
@@ -97,4 +97,8 @@ void ATurretBase::InvalidateCannon(){
 
 void ATurretBase::CastCannonToClass(){
     return;
+}
+
+void ATurretBase::SetActive(bool bIsActive){
+	TurretMesh->SetVisibility(bIsActive);
 }

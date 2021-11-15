@@ -1,0 +1,9 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.TargetingPlugin.cpp.obj": [
+			"TargetingMath.cpp.obj",
+			"TargetingPlugin.cpp.obj"
+		]
+	}
+}
