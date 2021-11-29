@@ -34,7 +34,11 @@
 /NODEFAULTLIB:"LIBCPD"
 /FUNCTIONPADMIN
 "C:\tankogeddon\Intermediate\Build\Win64\tankogeddonEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
-"C:\tankogeddon\Plugins\InventoryPlugin\Intermediate\Build\Win64\UE4Editor\Development\InventoryPlugin\InventoryPlugin.cpp.obj"
+"C:\tankogeddon\Plugins\InventoryPlugin\Intermediate\Build\Win64\UE4Editor\Development\InventoryPlugin\InventoryComponent.cpp.obj"
+"C:\tankogeddon\Plugins\InventoryPlugin\Intermediate\Build\Win64\UE4Editor\Development\InventoryPlugin\Module.InventoryPlugin.cpp.obj"
+"C:\tankogeddon\Plugins\InventoryPlugin\Intermediate\Build\Win64\UE4Editor\Development\InventoryPlugin\InventoryComponent.gen.cpp.obj"
+"C:\tankogeddon\Plugins\InventoryPlugin\Intermediate\Build\Win64\UE4Editor\Development\InventoryPlugin\InventoryPlugin.init.gen.cpp.obj"
+"C:\tankogeddon\Plugins\InventoryPlugin\Intermediate\Build\Win64\UE4Editor\Development\InventoryPlugin\Module.InventoryPlugin.gen.cpp.obj"
 "C:\tankogeddon\Plugins\InventoryPlugin\Intermediate\Build\Win64\UE4Editor\Development\InventoryPlugin\Default.rc2.res"
 "D:\UE_4.26Chaos\Engine\Intermediate\Build\Win64\UE4Editor\Development\CoreUObject\UE4Editor-CoreUObject.lib"
 "D:\UE_4.26Chaos\Engine\Intermediate\Build\Win64\UE4Editor\Development\Engine\UE4Editor-Engine.lib"

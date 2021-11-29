@@ -10,7 +10,7 @@ public class tankogeddon : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "UMG" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "InventoryPlugin", "TargetingPlugin", "Slate", "SlateCore", "DesktopPlatform", "MediaAssets" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "InventoryPlugin", "TargetingPlugin", "QuestSystemPlugin", "Slate", "SlateCore", "DesktopPlatform", "MediaAssets" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

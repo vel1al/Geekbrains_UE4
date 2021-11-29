@@ -1,11 +1,3 @@
 C:\tankogeddon\Plugins\InventoryPlugin\Intermediate\Build\Win64\UE4Editor\Development\InventoryPlugin\Definitions.InventoryPlugin.h
-C:/tankogeddon/Plugins/InventoryPlugin/Source/InventoryPlugin/Private/InventoryComponent.cpp
-C:\tankogeddon\Plugins\InventoryPlugin\Source\InventoryPlugin\Public\InventoryComponent.h
-C:\tankogeddon\Plugins\InventoryPlugin\Source\InventoryPlugin\Public\InventoryStructs.h
-D:\UE_4.26Chaos\Engine\Source\Runtime\Engine\Classes\Engine/DataTable.h
-D:\UE_4.26Chaos\Engine\Source\Runtime\Engine\Public\DataTableUtils.h
-D:\UE_4.26Chaos\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\DataTable.generated.h
-C:\tankogeddon\Plugins\InventoryPlugin\Intermediate\Build\Win64\UE4Editor\Inc\InventoryPlugin\InventoryStructs.generated.h
-C:\tankogeddon\Plugins\InventoryPlugin\Intermediate\Build\Win64\UE4Editor\Inc\InventoryPlugin\InventoryComponent.generated.h
 C:/tankogeddon/Plugins/InventoryPlugin/Source/InventoryPlugin/Private/InventoryPlugin.cpp
 C:\tankogeddon\Plugins\InventoryPlugin\Source\InventoryPlugin\Public\InventoryPlugin.h

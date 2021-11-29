@@ -6,7 +6,8 @@
 #include "InventoryStructs.h"
 #include "InventoryComponent.generated.h"
 
-
+DECLARE_EVENT_OneParam(UInventoryComponent, FOnItemCollectEvent, FName);
+DECLARE_EVENT_OneParam(UInventoryComponent, FOnMoneyReceiveEvent, int32);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class INVENTORYPLUGIN_API UInventoryComponent : public UActorComponent {
@@ -36,6 +37,9 @@ class INVENTORYPLUGIN_API UInventoryComponent : public UActorComponent {
 
 		void SetItemsQuantity(const int32& Value, const int32& RequiredSlot);
 		void IncrementItemQuantity(const int32& RequiredSlot, const int32& Value);
+
+		FOnItemCollectEvent OnItemCollect;
+		FOnMoneyReceiveEvent OnMoneyReceive;
 		
 	protected:
 		virtual void BeginDestroy() override;

@@ -44,6 +44,9 @@ bool UInventoryComponent::MoveItem(const int32& SlotFrom, const int32& SlotTo, c
 
 void UInventoryComponent::AddCash(const int32& Value) {
 	CashQuantity += Value;
+
+	if(OnMoneyReceive.IsBound())
+		OnMoneyReceive.Broadcast(Value);
 }
 
 bool UInventoryComponent::GetItem(const int32& RequiredSlot, FItemInfo* StructToSet) {
