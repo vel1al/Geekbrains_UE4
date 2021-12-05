@@ -32,12 +32,17 @@ void ATankHUD::BeginPlay() {
     UUserWidget* PauseMenu = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::Pause);
     UUserWidget* HUD = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::HUD);
     UUserWidget* GameOver = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::GameOver);
-
+    UUserWidget* QuestJournal = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::QuestJournal);
+    
     AllocatedWidgets.Add(EWidget::Pause, PauseMenu);
     AllocatedWidgets.Add(EWidget::HUD, HUD);
     AllocatedWidgets.Add(EWidget::GameOver, GameOver);
+    AllocatedWidgets.Add(EWidget::QuestJournal, QuestJournal);
 
+    //GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::Pause);
     //GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::HUD);
+    //GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::GameOver);
+    GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::QuestJournal);
 
     if (GetWorld()){
         APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
@@ -48,9 +53,6 @@ void ATankHUD::BeginPlay() {
         }
     }
 }
-// void ATankHUD::BeginDestroy() {
-//     AllocatedWidgets.Empty();
-// }
 
 void ATankHUD::OnGameOverEnabling() {
     //do some effects

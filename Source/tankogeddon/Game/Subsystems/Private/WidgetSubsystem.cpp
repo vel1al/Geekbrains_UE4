@@ -53,6 +53,19 @@ bool UWidgetSubsystem::DeleteWidget(EWidget RequiredWidget){
     return true;
 }
 
+void UWidgetSubsystem::ToggleWidgetVisibility(EWidget Widget, const bool bState) {
+    if(Widget == EWidget::None)
+        return;
+
+    if(!AllocatedWidgets.Contains(Widget))
+        return;
+
+    if(bState)
+        AllocatedWidgets[Widget]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+    else
+        AllocatedWidgets[Widget]->SetVisibility(ESlateVisibility::Collapsed);
+}
+
 UUserWidget* UWidgetSubsystem::AllocateWidget(EWidget RequiredWidget){
     if(RequiredWidget == EWidget::None)
         return nullptr;

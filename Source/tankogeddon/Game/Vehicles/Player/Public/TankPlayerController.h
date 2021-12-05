@@ -48,6 +48,9 @@ class TANKOGEDDON_API ATankPlayerController : public APlayerController{
 		void OpenInvetory();
 		void CloseInvetory();
 	
+		void OpenQuestLog();
+		void CloseQuestLog();
+	
 	private:
 		UPROPERTY()
 		class APlayerVehicle* PlayerVehicle;

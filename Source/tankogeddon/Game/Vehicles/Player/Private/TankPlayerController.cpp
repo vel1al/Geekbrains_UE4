@@ -3,6 +3,7 @@
 
 #include "tankogeddon/Game/Misc/Components/Public/PlayerInventoryInteraction.h"
 #include "tankogeddon/Game/Misc/Components/Public/TurretBase.h"
+#include "tankogeddon/Game/Subsystems/Public/WidgetSubsystem.h"
 
 
 ATankPlayerController::ATankPlayerController(){
@@ -27,6 +28,9 @@ void ATankPlayerController::SetupInputComponent(){
     InputComponent->BindAction("Interaction", IE_Pressed, this, &ATankPlayerController::Interaction);
     InputComponent->BindAction("OpenInventory", IE_Pressed, this, &ATankPlayerController::OpenInvetory);
     InputComponent->BindAction("CloseInventory", IE_Pressed, this, &ATankPlayerController::CloseInvetory);
+
+    InputComponent->BindAction("OpenQuestLog", IE_Pressed, this, &ATankPlayerController::OpenQuestLog);
+    InputComponent->BindAction("CloseQuestLog", IE_Pressed, this, &ATankPlayerController::CloseQuestLog);
     
     InputComponent->BindKey(EKeys::LeftMouseButton, IE_Released, this, &ATankPlayerController::OnMouseButtonUpFunc);
 
@@ -88,6 +92,18 @@ void ATankPlayerController::OpenInvetory() {
 void ATankPlayerController::CloseInvetory() {
     if(PlayerVehicle)
         PlayerVehicle->ToggleInventory(false);
+}
+
+void ATankPlayerController::OpenQuestLog() {
+    UWidgetSubsystem* WidgetSubSystem = GetWorld()->GetGameInstance()->GetSubsystem<UWidgetSubsystem>();
+    if(WidgetSubSystem)
+        WidgetSubSystem->ToggleWidgetVisibility(EWidget::QuestJournal, true);
+}
+
+void ATankPlayerController::CloseQuestLog() {
+    UWidgetSubsystem* WidgetSubSystem = GetWorld()->GetGameInstance()->GetSubsystem<UWidgetSubsystem>();
+    if(WidgetSubSystem)
+        WidgetSubSystem->ToggleWidgetVisibility(EWidget::QuestJournal, false);
 }
 
 FVector ATankPlayerController::GetMousePos() const{

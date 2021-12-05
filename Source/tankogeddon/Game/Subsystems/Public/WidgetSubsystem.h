@@ -16,10 +16,12 @@ class TANKOGEDDON_API UWidgetSubsystem : public UGameInstanceSubsystem{
 	
 	public:
 		bool AddWidgetToViewport(EWidget RequiredWidget, int ZOrder = 0);
-
+	
 		bool RemoveWidgetFromViewport(EWidget RequiredWidget);
 		bool DeleteWidget(EWidget RequiredWidget);
 
+		void ToggleWidgetVisibility(EWidget Widget, const bool bState);
+	
 		UUserWidget* AllocateWidget(EWidget RequiredWidget);
 
 	protected:
