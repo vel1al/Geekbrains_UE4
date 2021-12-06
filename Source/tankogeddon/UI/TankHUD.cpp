@@ -6,44 +6,42 @@
 #include "Blueprint/UserWidget.h"
 
 #include "tankogeddon/Game/Misc/GameStructs.h"
+#include "tankogeddon/Game/Subsystems/Public/TankGameModeBase.h"
 
 
-//idk what do with garbagecollector
-void ATankHUD::SetActivePauseMenu(bool bActive) {
-    if(AllocatedWidgets.Find(EWidget::Pause)){
-        UUserWidget* buffer = *AllocatedWidgets.Find(EWidget::Pause);
-        buffer->SetIsEnabled(bActive);
-    }
-}
-void ATankHUD::SetActiveHUD(bool bActive) {    
-    if(AllocatedWidgets.Find(EWidget::HUD)){
-        UUserWidget* buffer = *AllocatedWidgets.Find(EWidget::HUD);
-        buffer->SetIsEnabled(bActive);
-    }
-}
-void ATankHUD::SetActiveGaveOver(bool bActive) {
-    if(AllocatedWidgets.Find(EWidget::GameOver)){
-        UUserWidget* buffer = *AllocatedWidgets.Find(EWidget::GameOver);
-        buffer->SetIsEnabled(bActive);
-    }
+void ATankHUD::SetActiveWidget(EWidget RequiredWidget, bool bState) {
+    WidgetSubsystem->SetActiveWidget(RequiredWidget, bState);
 }
 
 void ATankHUD::BeginPlay() {
-    UUserWidget* PauseMenu = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::Pause);
-    UUserWidget* HUD = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::HUD);
-    UUserWidget* GameOver = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::GameOver);
-    UUserWidget* QuestJournal = GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AllocateWidget(EWidget::QuestJournal);
+    WidgetSubsystem = GetGameInstance()->GetSubsystem<UWidgetSubsystem>();
+    if(!WidgetSubsystem)
+        return;
+
+    ATankGameModeBase* TankGameModeBase = GetWorld()->GetAuthGameMode<ATankGameModeBase>();
+    if(!TankGameModeBase)
+        return;
+
+    WidgetSubsystem->Init(TankGameModeBase->GetDefaultClasses());
+    
+    UUserWidget* PauseMenu = WidgetSubsystem->AllocateWidget(EWidget::Pause);
+    UUserWidget* HUD = WidgetSubsystem->AllocateWidget(EWidget::HUD);
+    UUserWidget* GameOver = WidgetSubsystem->AllocateWidget(EWidget::GameOver);
+    UUserWidget* QuestJournal = WidgetSubsystem->AllocateWidget(EWidget::QuestJournal);
+    UUserWidget* QuestHUD = WidgetSubsystem->AllocateWidget(EWidget::QuestHUD);
     
     AllocatedWidgets.Add(EWidget::Pause, PauseMenu);
     AllocatedWidgets.Add(EWidget::HUD, HUD);
     AllocatedWidgets.Add(EWidget::GameOver, GameOver);
     AllocatedWidgets.Add(EWidget::QuestJournal, QuestJournal);
-
-    //GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::Pause);
-    //GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::HUD);
-    //GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::GameOver);
-    GetGameInstance()->GetSubsystem<UWidgetSubsystem>()->AddWidgetToViewport(EWidget::QuestJournal);
-
+    AllocatedWidgets.Add(EWidget::QuestHUD, QuestHUD);
+    
+    WidgetSubsystem->AddWidgetToViewport(EWidget::Pause);
+    WidgetSubsystem->AddWidgetToViewport(EWidget::HUD);
+    WidgetSubsystem->AddWidgetToViewport(EWidget::GameOver);
+    WidgetSubsystem->AddWidgetToViewport(EWidget::QuestJournal);
+    WidgetSubsystem->AddWidgetToViewport(EWidget::QuestHUD);
+    
     if (GetWorld()){
         APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
             
@@ -52,8 +50,4 @@ void ATankHUD::BeginPlay() {
             PlayerController->bShowMouseCursor = false;
         }
     }
-}
-
-void ATankHUD::OnGameOverEnabling() {
-    //do some effects
 }

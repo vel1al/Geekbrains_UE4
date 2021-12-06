@@ -1,0 +1,2 @@
+C:\tankogeddon\Plugins\QuestSystemPlugin\Intermediate\Build\Win64\UE4Editor\Development\QuestSystemPlugin\Definitions.QuestSystemPlugin.h
+C:\tankogeddon\Plugins\QuestSystemPlugin\Source\QuestSystemPlugin\Public\QuestSystemPlugin.h

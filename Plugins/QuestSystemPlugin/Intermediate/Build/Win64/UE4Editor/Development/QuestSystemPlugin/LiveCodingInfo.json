@@ -1,0 +1,48 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.QuestSystemPlugin.cpp.obj": [
+			"ObjectiveAssetAction.cpp.obj",
+			"ObjectiveClassDetails.cpp.obj",
+			"ObjectiveObjectFactory.cpp.obj",
+			"Quest.cpp.obj",
+			"QuestManager.cpp.obj",
+			"QuestNPC.cpp.obj",
+			"LocationMarker.cpp.obj",
+			"Objective.cpp.obj",
+			"ObjectiveCollect.cpp.obj",
+			"ObjectiveInteract.cpp.obj",
+			"ObjectiveKill.cpp.obj",
+			"ObjectiveLocation.cpp.obj",
+			"ObjectiveMoney.cpp.obj",
+			"ObjectiveScore.cpp.obj",
+			"QuestSystemPlugin.cpp.obj",
+			"ObjectiveDescriptionWidget.cpp.obj",
+			"QuestDescriptionWidget.cpp.obj",
+			"QuestHUD.cpp.obj",
+			"QuestJournalElementWidget.cpp.obj",
+			"QuestJournalWidget.cpp.obj",
+			"QuestTakeDialog.cpp.obj"
+		],
+		"Module.QuestSystemPlugin.gen.cpp.obj": [
+			"LocationMarker.gen.cpp.obj",
+			"Objective.gen.cpp.obj",
+			"ObjectiveDescriptionWidget.gen.cpp.obj",
+			"ObjectiveInteract.gen.cpp.obj",
+			"ObjectiveKill.gen.cpp.obj",
+			"ObjectiveLocation.gen.cpp.obj",
+			"ObjectiveMoney.gen.cpp.obj",
+			"ObjectiveObjectFactory.gen.cpp.obj",
+			"ObjectiveScore.gen.cpp.obj",
+			"Quest.gen.cpp.obj",
+			"QuestDescriptionWidget.gen.cpp.obj",
+			"QuestHUD.gen.cpp.obj",
+			"QuestJournalElementWidget.gen.cpp.obj",
+			"QuestJournalWidget.gen.cpp.obj",
+			"QuestManager.gen.cpp.obj",
+			"QuestNPC.gen.cpp.obj",
+			"QuestSystemPlugin.init.gen.cpp.obj",
+			"QuestTakeDialog.gen.cpp.obj"
+		]
+	}
+}

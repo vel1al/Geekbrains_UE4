@@ -4,6 +4,12 @@
 #include "GameFramework/Actor.h"
 #include "TurretBox.generated.h"
 
+class USpotLightComponent;
+class UPrimitiveComponent;
+class UFloatingMesh;
+class ATurretBase;
+
+
 UCLASS()
 class TANKOGEDDON_API ATurretBox : public AActor{
 		GENERATED_BODY()
@@ -12,30 +18,15 @@ class TANKOGEDDON_API ATurretBox : public AActor{
 		ATurretBox();
 
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class UStaticMeshComponent* Mesh;
+		UFloatingMesh* Mesh;
 		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class USpotLightComponent* Light;
+		USpotLightComponent* Light;
 
 		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Box|Turret")
-		TSubclassOf<class ATurretBase> TurretClass;
+		TSubclassOf<ATurretBase> TurretClass;
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Box|Movement")
-		float RotationRatio;
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Box|Movement")
-		float FlyingHeightRatio;
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Box|Movement")
-		float FlyingSpeedRatio;
 
 	protected:
-		virtual void BeginPlay() override;
-		virtual void Tick(const float DeltaTime) override;
-
-	private:
-		float SinDegrees = 1.f;
-
-		FVector ConstLocation;
-		FRotator ConstRotation;
-
 		UFUNCTION()
-		void OnMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		void OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };

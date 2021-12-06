@@ -10,23 +10,19 @@
 #include "TankHUD.generated.h"
 
 class UUserWidget;
+class UWidgetSubsystem;
 
 
 UCLASS()
 class TANKOGEDDON_API ATankHUD : public AHUD{
 	GENERATED_BODY()
-	
-	public:
-		void SetActivePauseMenu(bool bActive);
-		void SetActiveHUD(bool bActive);
-		void SetActiveGaveOver(bool bActive);
 
+	public:
+		void SetActiveWidget(EWidget RequiredWidget, bool bState);
+	
 	protected:
 		virtual void BeginPlay() override;
-		//virtual void BeginDestroy() override;
 
-	private:
-		void OnGameOverEnabling();
-
+		UWidgetSubsystem* WidgetSubsystem;
 		TMap<EWidget, UUserWidget*> AllocatedWidgets;
 };

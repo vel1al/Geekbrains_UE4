@@ -19,7 +19,8 @@ enum class EWidget : uint8 {
     Pause,
     HUD,
 	GameOver,
-	QuestJournal
+	QuestJournal,
+	QuestHUD
 };
 
 USTRUCT(BlueprintType)

@@ -1,0 +1,14 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UE4Editor-QuestSystemPlugin-2938.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:\tankogeddon\Intermediate\Build\Win64\tankogeddonEditor\Development\UnrealEd\SharedPCH.UnrealEd.ShadowErrors.h.obj"
+"C:\tankogeddon\Plugins\QuestSystemPlugin\Intermediate\Build\Win64\UE4Editor\Development\QuestSystemPlugin\Module.QuestSystemPlugin.cpp.obj"
+"C:\tankogeddon\Plugins\QuestSystemPlugin\Intermediate\Build\Win64\UE4Editor\Development\QuestSystemPlugin\Module.QuestSystemPlugin.gen.cpp.obj"
+"C:\tankogeddon\Plugins\QuestSystemPlugin\Intermediate\Build\Win64\UE4Editor\Development\QuestSystemPlugin\Default.rc2.res"
+/OUT:"C:\tankogeddon\Plugins\QuestSystemPlugin\Intermediate\Build\Win64\UE4Editor\Development\QuestSystemPlugin\UE4Editor-QuestSystemPlugin-2938.lib"
+/INCLUDE:IMPLEMENT_MODULE_QuestSystemPlugin

@@ -19,7 +19,8 @@ class TANKOGEDDON_API ATankGameModeBase : public AGameModeBase{
 		UFUNCTION(BlueprintImplementableEvent)
 		void OnPlayerDieEvent();
 
-		TSubclassOf<UUserWidget> GetDefaultClass(EWidget Key); 
+		TSubclassOf<UUserWidget> GetDefaultClass(EWidget Key) const;
+		TMap<EWidget, TSubclassOf<UUserWidget>> GetDefaultClasses() const;
 		TArray<FObstacle> GetDefaultObstacles();
 
 	protected:

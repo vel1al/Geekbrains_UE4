@@ -1,49 +1,24 @@
 #include "tankogeddon/Game/Misc/SceneActors/Public/TurretBox.h"
 #include "tankogeddon/Game/Vehicles/Player/Public/PlayerVehicle.h"
+#include "tankogeddon/Game/Misc/Components/Public/FloatingMesh.h"
 
 #include "Components/SpotLightComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 
 ATurretBox::ATurretBox(){
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
-    USceneComponent* SceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-    RootComponent = SceneComp;
+    Mesh = CreateDefaultSubobject<UFloatingMesh>(TEXT("Mesh"));
+    RootComponent = Mesh;
 
-    Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-    Mesh->SetupAttachment(RootComponent);
-
-    Mesh->OnComponentBeginOverlap.AddDynamic(this, &ATurretBox::OnMeshOverlapBegin);
-    Mesh->SetCollisionProfileName(FName("OverlapAll"));
-    Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    Mesh->SetGenerateOverlapEvents(true);
+    Mesh->Mesh->OnComponentBeginOverlap.AddDynamic(this, &ATurretBox::OnMeshOverlapBegin);
+    Mesh->Mesh->SetCollisionProfileName(FName("OverlapAll"));
+    Mesh->Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+    Mesh->Mesh->SetGenerateOverlapEvents(true);
 
 	Light = CreateDefaultSubobject<USpotLightComponent>(TEXT("Light"));
     Light->SetupAttachment(RootComponent);
-}
-
-void ATurretBox::BeginPlay(){
-	Super::BeginPlay();
-
-	ConstLocation = GetActorLocation();
-	ConstRotation = GetActorRotation();
-}
-
-void ATurretBox::Tick(const float DeltaTime){
-	Super::Tick(DeltaTime);
-
-	SinDegrees += FlyingSpeedRatio;
-	if(++SinDegrees > 180)
-		SinDegrees = 1;
-
-	FRotator TargetRotation = GetActorRotation();
-	TargetRotation.Yaw = TargetRotation.Yaw + ConstRotation.Yaw * RotationRatio;
-	FVector TargetLocation = GetActorLocation();
-	TargetLocation.Z = ConstLocation.Z * UKismetMathLibrary::Sin(SinDegrees) * FlyingHeightRatio;
-
-	SetActorRotation(TargetRotation);
-	SetActorLocation(TargetLocation);
 }
 
 void ATurretBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult){

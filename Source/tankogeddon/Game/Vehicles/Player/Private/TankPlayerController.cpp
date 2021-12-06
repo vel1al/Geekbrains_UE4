@@ -96,14 +96,18 @@ void ATankPlayerController::CloseInvetory() {
 
 void ATankPlayerController::OpenQuestLog() {
     UWidgetSubsystem* WidgetSubSystem = GetWorld()->GetGameInstance()->GetSubsystem<UWidgetSubsystem>();
-    if(WidgetSubSystem)
-        WidgetSubSystem->ToggleWidgetVisibility(EWidget::QuestJournal, true);
+    if(WidgetSubSystem) {
+        WidgetSubSystem->SetActiveWidget(EWidget::QuestJournal, true);
+        WidgetSubSystem->SetActiveWidget(EWidget::QuestHUD, false);
+    }
 }
 
 void ATankPlayerController::CloseQuestLog() {
     UWidgetSubsystem* WidgetSubSystem = GetWorld()->GetGameInstance()->GetSubsystem<UWidgetSubsystem>();
-    if(WidgetSubSystem)
-        WidgetSubSystem->ToggleWidgetVisibility(EWidget::QuestJournal, false);
+    if(WidgetSubSystem) {
+        WidgetSubSystem->SetActiveWidget(EWidget::QuestJournal, false);
+        WidgetSubSystem->SetActiveWidget(EWidget::QuestHUD, true);
+    }
 }
 
 FVector ATankPlayerController::GetMousePos() const{

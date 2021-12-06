@@ -13,14 +13,18 @@ void ATankGameModeBase::PlayerDie(){
     AHUD* HUD = UGameplayStatics::GetPlayerController(this,0)->GetHUD();
     ATankHUD* TankHUD = Cast<ATankHUD>(HUD);
     if(TankHUD)
-        TankHUD->SetActiveGaveOver(true); 
+        TankHUD->SetActiveWidget(EWidget::GameOver, true); 
 }
 
-TSubclassOf<UUserWidget> ATankGameModeBase::GetDefaultClass(EWidget Key){
+TSubclassOf<UUserWidget> ATankGameModeBase::GetDefaultClass(EWidget Key) const{
     if(DefaultWidgetClases.Contains(Key))
         return DefaultWidgetClases[Key];
 
     return nullptr;
+}
+
+TMap<EWidget, TSubclassOf<UUserWidget>> ATankGameModeBase::GetDefaultClasses() const {
+    return DefaultWidgetClases;
 }
 
 TArray<FObstacle> ATankGameModeBase::GetDefaultObstacles(){

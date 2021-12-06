@@ -6,7 +6,6 @@
 
 #include "WidgetSubsystem.generated.h"
 
-class ATankGameModeBase;
 class UUserWidget;
 
 
@@ -15,22 +14,19 @@ class TANKOGEDDON_API UWidgetSubsystem : public UGameInstanceSubsystem{
 	GENERATED_BODY()
 	
 	public:
+		void Init(TMap<EWidget, TSubclassOf<UUserWidget>> WidgetClassesToBind);
+	
 		bool AddWidgetToViewport(EWidget RequiredWidget, int ZOrder = 0);
 	
 		bool RemoveWidgetFromViewport(EWidget RequiredWidget);
 		bool DeleteWidget(EWidget RequiredWidget);
-
-		void ToggleWidgetVisibility(EWidget Widget, const bool bState);
+	
+		void SetActiveWidget(EWidget RequiredWidget, bool bState);
 	
 		UUserWidget* AllocateWidget(EWidget RequiredWidget);
-
+		UUserWidget* GetAllocatedWidget(EWidget RequiredWidget) const;
+		
 	protected:
-		//virtual void BeginDestroy() override;
-
-	private:
-		void UpdateGameModeRef();
-
-    	ATankGameModeBase* CurrentGameMode;
+		TMap<EWidget, TSubclassOf<UUserWidget>> WidgetClasses;
 		TMap<EWidget, UUserWidget*> AllocatedWidgets;
-		TMap<EWidget, UUserWidget*> ViewportWidgets;
 };

@@ -4,22 +4,24 @@
 #include "tankogeddon/Game/Subsystems/Public/TankGameModeBase.h"
 
 
-void UWidgetSubsystem::UpdateGameModeRef(){
-    CurrentGameMode = Cast<ATankGameModeBase>(GetWorld()->GetAuthGameMode());
+void UWidgetSubsystem::Init(TMap<EWidget, TSubclassOf<UUserWidget>> WidgetClassesToBind) {
+    WidgetClasses = WidgetClassesToBind;
 }
 
 bool UWidgetSubsystem::AddWidgetToViewport(EWidget RequiredWidget, int ZOrder){
     if(RequiredWidget == EWidget::None)
         return false;
-    
-    UUserWidget* NewWidget = *AllocatedWidgets.Find(RequiredWidget);
 
-    if(!NewWidget)
+    UUserWidget* WidgetToAddToViewport = nullptr;
+    if(!AllocatedWidgets.Contains(RequiredWidget)) 
+        WidgetToAddToViewport = AllocateWidget(RequiredWidget);
+    else 
+        WidgetToAddToViewport = AllocatedWidgets[RequiredWidget];
+
+    if(!WidgetToAddToViewport) 
         return false;
-
-    NewWidget->AddToViewport(ZOrder);
     
-    ViewportWidgets.Add(RequiredWidget, NewWidget);
+    WidgetToAddToViewport->AddToViewport(ZOrder);
 
     return true;
 }
@@ -27,13 +29,16 @@ bool UWidgetSubsystem::AddWidgetToViewport(EWidget RequiredWidget, int ZOrder){
 bool UWidgetSubsystem::RemoveWidgetFromViewport(EWidget RequiredWidget){
     if(RequiredWidget == EWidget::None)
         return false;
-
-    UUserWidget* FindedWidget = *ViewportWidgets.Find(RequiredWidget);
-
-    if(!FindedWidget)
+    if(!AllocatedWidgets.Contains(RequiredWidget))
         return false;
+    
+    UUserWidget* WidgetToRemoveFromViewport = AllocatedWidgets[RequiredWidget];
+    if(!WidgetToRemoveFromViewport){
+        AllocatedWidgets.Remove(RequiredWidget);
+        return false;
+    }
 
-    FindedWidget->RemoveFromParent();
+    WidgetToRemoveFromViewport->RemoveFromViewport();
 
     return true;
 }
@@ -41,54 +46,50 @@ bool UWidgetSubsystem::RemoveWidgetFromViewport(EWidget RequiredWidget){
 bool UWidgetSubsystem::DeleteWidget(EWidget RequiredWidget){
     if(RequiredWidget == EWidget::None)
         return false;
-
-    UUserWidget* FindedWidget = *AllocatedWidgets.Find(RequiredWidget);
-
-    if(!FindedWidget)
+    if(!AllocatedWidgets.Contains(RequiredWidget))
         return false;
 
-    FindedWidget->RemoveFromParent();
-    FindedWidget->BeginDestroy();
+    UUserWidget* WidgetToDelete = AllocatedWidgets[RequiredWidget];
+    if(!WidgetToDelete) {
+        AllocatedWidgets.Remove(RequiredWidget);
+        return false;
+    }
+    
+    WidgetToDelete->RemoveFromParent();
+    AllocatedWidgets.Remove(RequiredWidget);
 
     return true;
-}
-
-void UWidgetSubsystem::ToggleWidgetVisibility(EWidget Widget, const bool bState) {
-    if(Widget == EWidget::None)
-        return;
-
-    if(!AllocatedWidgets.Contains(Widget))
-        return;
-
-    if(bState)
-        AllocatedWidgets[Widget]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-    else
-        AllocatedWidgets[Widget]->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 UUserWidget* UWidgetSubsystem::AllocateWidget(EWidget RequiredWidget){
     if(RequiredWidget == EWidget::None)
         return nullptr;
-    
-    if(!(CurrentGameMode)){
-        UpdateGameModeRef();
-
-        if(!(CurrentGameMode))
-            return nullptr;
-    }
-
-    UUserWidget* NewWidget = CreateWidget<UUserWidget>(GetWorld(), CurrentGameMode->GetDefaultClass(RequiredWidget));
-
-    if(!NewWidget)
+    if(!WidgetClasses.Contains(RequiredWidget))
         return nullptr;
+    
+    UUserWidget* NewWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetClasses[RequiredWidget]);
 
     AllocatedWidgets.Add(RequiredWidget, NewWidget);
         
     return NewWidget;
 }
 
-// void UWidgetSubsystem::BeginDestroy(){
-//     // AllocatedWidgets.Empty();
-//     // ViewportWidgets.Empty();
-//     // CurrentGameMode = nullptr;
-// }
+UUserWidget* UWidgetSubsystem::GetAllocatedWidget(EWidget RequiredWidget) const {
+    if(RequiredWidget == EWidget::None)
+        return nullptr;
+    if(!AllocatedWidgets.Contains(RequiredWidget))
+        return nullptr;
+
+    return AllocatedWidgets[RequiredWidget];
+}
+
+void UWidgetSubsystem::SetActiveWidget(EWidget RequiredWidget, bool bActive) {
+    UUserWidget* Widget = GetAllocatedWidget(RequiredWidget);
+    if(!Widget)
+        return;
+
+    if(bActive)
+        Widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+    else
+        Widget->SetVisibility(ESlateVisibility::Collapsed);
+}
